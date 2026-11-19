@@ -104,10 +104,22 @@ export function UnsubscribeView({ token, onGoHome }: UnsubscribeViewProps) {
         </div>
       </main>
 
-      <footer className="flex w-full items-center justify-center pt-2">
+      <footer className="flex w-full flex-wrap items-center justify-center gap-x-2.5 gap-y-1 pt-2">
         <p className="text-[11.5px] font-medium text-[#71717A]">
           {PUNTO_BRAND.name} <span aria-hidden="true">·</span> {PUNTO_BRAND.developer}
         </p>
+        <span aria-hidden="true" className="text-[11.5px] text-[#71717A]">
+          ·
+        </span>
+        <nav aria-label="Legal" className="flex items-center gap-2 text-[11.5px] font-medium text-[#71717A]">
+          <a href="/privacidad" className="transition-colors hover:text-[#0B0B0D]">
+            Privacidad
+          </a>
+          <span aria-hidden="true">·</span>
+          <a href="/terminos" className="transition-colors hover:text-[#0B0B0D]">
+            Términos
+          </a>
+        </nav>
       </footer>
     </motion.div>
   );

@@ -2,5 +2,20 @@
   command = "npm run build"
   publish = "dist"
 
-[build.environment]
-  NODE_VERSION = "22"
+[[redirects]]
+  from = "/privacidad"
+  to = "https://punto-legal.netlify.app/privacidad"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/terminos"
+  to = "https://punto-legal.netlify.app/terminos"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+

@@ -1,5 +1,6 @@
 import { Mail } from 'lucide-react';
 import { type MouseEvent } from 'react';
+import { PUNTO_BRAND } from '../config/punto';
 import { LegalLayout } from './LegalLayout';
 
 interface LegalNoticePageProps {
@@ -41,7 +42,7 @@ export function LegalNoticePage({ onNavigate }: LegalNoticePageProps) {
           <div>
             <dt className="text-[11.5px] font-medium text-[#71717A]">Titular:</dt>
             <dd className="mt-0.5 text-[13.5px] font-semibold text-[#0B0B0D]">
-              MUHAMADOU CAMARA DIBBASY
+              MUHAMADOU CAMARA DIBBASY (DNI: 43236512P)
             </dd>
           </div>
           <div>
@@ -59,7 +60,7 @@ export function LegalNoticePage({ onNavigate }: LegalNoticePageProps) {
           <div>
             <dt className="text-[11.5px] font-medium text-[#71717A]">Correo de contacto:</dt>
             <dd className="mt-0.5 text-[13.5px] font-semibold text-[#0B0B0D]">
-              mcdgroup.dev@gmail.com
+              {PUNTO_BRAND.contactEmail}
             </dd>
           </div>
         </dl>
@@ -87,14 +88,25 @@ export function LegalNoticePage({ onNavigate }: LegalNoticePageProps) {
               <strong>Domicilio:</strong> Carrer del Riu Segre, 2, 2, 17003 Girona, España
             </li>
             <li>
-              <strong>Correo electrónico:</strong>{' '}
-              <a href="mailto:mcdgroup.dev@gmail.com" className="font-medium text-[#0B0B0D] underline">
-                mcdgroup.dev@gmail.com
+              <strong>Correo electrónico de Punto:</strong>{' '}
+              <a
+                href={`mailto:${PUNTO_BRAND.contactEmail}`}
+                className="font-medium text-[#0B0B0D] underline"
+              >
+                {PUNTO_BRAND.contactEmail}
               </a>
             </li>
             <li>
-              <strong>NIF / NIE:</strong> Pendiente de incorporar por el titular antes del inicio de
-              actividad económica o facturación directa.
+              <strong>Canal de denuncias y notificaciones legales:</strong>{' '}
+              <a
+                href={`mailto:${PUNTO_BRAND.reportsEmail}`}
+                className="font-medium text-[#0B0B0D] underline"
+              >
+                {PUNTO_BRAND.reportsEmail}
+              </a>
+            </li>
+            <li>
+              <strong>DNI / NIF:</strong> 43236512P
             </li>
           </ul>
         </section>
@@ -167,9 +179,19 @@ export function LegalNoticePage({ onNavigate }: LegalNoticePageProps) {
           <p>
             El presente Aviso legal se rige por la legislación española y la normativa vigente de la
             Unión Europea (incluido el Reglamento General de Protección de Datos, la LOPDGDD y la
-            LSSI-CE). Para cualquier comunicación directa o notificación legal puedes dirigirte a{' '}
-            <a href="mailto:mcdgroup.dev@gmail.com" className="font-medium text-[#0B0B0D] underline">
-              mcdgroup.dev@gmail.com
+            LSSI-CE). Para comunicaciones generales puedes dirigirte a{' '}
+            <a
+              href={`mailto:${PUNTO_BRAND.contactEmail}`}
+              className="font-medium text-[#0B0B0D] underline"
+            >
+              {PUNTO_BRAND.contactEmail}
+            </a>
+            , y para denuncias o notificaciones legales formales a{' '}
+            <a
+              href={`mailto:${PUNTO_BRAND.reportsEmail}`}
+              className="font-medium text-[#0B0B0D] underline"
+            >
+              {PUNTO_BRAND.reportsEmail}
             </a>
             .
           </p>
@@ -177,11 +199,11 @@ export function LegalNoticePage({ onNavigate }: LegalNoticePageProps) {
 
         <div className="flex flex-wrap items-center gap-3 pt-2">
           <a
-            href="mailto:mcdgroup.dev@gmail.com"
+            href={`mailto:${PUNTO_BRAND.contactEmail}`}
             className="inline-flex items-center gap-1.5 rounded-full bg-[#0A0A0C] px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#1C1C20]"
           >
             <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>mcdgroup.dev@gmail.com</span>
+            <span>{PUNTO_BRAND.contactEmail}</span>
           </a>
           <a
             href="/"

@@ -2,6 +2,8 @@ export const PUNTO_BRAND = {
   name: 'Punto',
   developer: 'MCD Group',
   tagline: 'Conecta. Crea. Comparte.',
+  contactEmail: 'hola@usepunto.com',
+  reportsEmail: 'mcdgroup.dev@gmail.com',
   socials: [
     {
       id: 'tiktok',

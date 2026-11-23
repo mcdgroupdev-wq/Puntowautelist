@@ -1,5 +1,6 @@
 import { Check, ChevronDown, ChevronUp, Copy, Mail, Printer } from 'lucide-react';
 import { type MouseEvent, useState } from 'react';
+import { PUNTO_BRAND } from '../config/punto';
 import { LegalLayout } from './LegalLayout';
 
 interface PrivacyPolicyPageProps {
@@ -20,7 +21,8 @@ const SECTIONS = [
   { id: 'contacto', label: '11. Contacto y reclamaciones' },
 ] as const;
 
-const EMAIL_ADDRESS = 'mcdgroup.dev@gmail.com';
+const EMAIL_ADDRESS = PUNTO_BRAND.contactEmail;
+const REPORTS_EMAIL_ADDRESS = PUNTO_BRAND.reportsEmail;
 const POSTAL_ADDRESS = 'Carrer del Riu Segre, 2, 2, 17003 Girona, España';
 const DELETE_TEMPLATE = `Asunto: Solicitud de eliminación de cuenta y datos - Punto\n\nCorreo electrónico registrado en la aplicación:\nNombre de usuario o alias visible:`;
 
@@ -207,7 +209,7 @@ export function PrivacyPolicyPage({ onNavigate }: PrivacyPolicyPageProps) {
             </p>
           </div>
           <p>
-            Para cualquier consulta relacionada con la privacidad y el tratamiento de datos personales, o para ejercer cualquiera de los derechos de protección de datos reconocidos por la legislación aplicable, puedes contactar con nosotros mediante el correo electrónico indicado: mcdgroup.dev@gmail.com.
+            Para cualquier consulta relacionada con la privacidad y el tratamiento de datos personales, o para ejercer cualquiera de los derechos de protección de datos reconocidos por la legislación aplicable, puedes contactar con nosotros mediante el correo electrónico indicado: {EMAIL_ADDRESS}.
           </p>
         </section>
 
@@ -553,7 +555,7 @@ export function PrivacyPolicyPage({ onNavigate }: PrivacyPolicyPageProps) {
                 </button>
               </div>
               <p>
-                Envía un mensaje a mcdgroup.dev@gmail.com desde la misma dirección de correo electrónico vinculada a tu cuenta de Punto, indicando:
+                Envía un mensaje a {EMAIL_ADDRESS} desde la misma dirección de correo electrónico vinculada a tu cuenta de Punto, indicando:
               </p>
               <ul className="list-disc space-y-1 pl-5 text-[14.5px]">
                 <li>Asunto: «Solicitud de eliminación de cuenta y datos - Punto»</li>
@@ -594,7 +596,7 @@ export function PrivacyPolicyPage({ onNavigate }: PrivacyPolicyPageProps) {
             Si detectamos que una persona menor de esa edad utiliza Punto, podremos tomar medidas para restringir o eliminar su cuenta.
           </p>
           <p>
-            Punto no recopila intencionadamente datos personales de personas menores de 16 años. Si un padre, madre o tutor legal detecta que un menor bajo su tutela ha proporcionado información personal en Punto sin cumplir con la edad mínima requerida, puede ponerse en contacto con nosotros a través de mcdgroup.dev@gmail.com para que verifiquemos la situación y procedamos con la restricción o eliminación correspondiente.
+            Punto no recopila intencionadamente datos personales de personas menores de 16 años. Si un padre, madre o tutor legal detecta que un menor bajo su tutela ha proporcionado información personal en Punto sin cumplir con la edad mínima requerida, puede ponerse en contacto con nosotros a través de {REPORTS_EMAIL_ADDRESS} para que verifiquemos la situación y procedamos con la restricción o eliminación correspondiente.
           </p>
         </section>
 
@@ -628,8 +630,15 @@ export function PrivacyPolicyPage({ onNavigate }: PrivacyPolicyPageProps) {
               <p>Responsable del tratamiento de datos de Punto</p>
               <p>Carrer del Riu Segre, 2, 2, 17003 Girona, España</p>
               <p>
+                <strong className="text-[#0B0B0D]">Correo de Punto:</strong>{' '}
                 <a href={`mailto:${EMAIL_ADDRESS}`} className="font-medium underline hover:text-[#0B0B0D]">
                   {EMAIL_ADDRESS}
+                </a>
+              </p>
+              <p>
+                <strong className="text-[#0B0B0D]">Denuncias y protección de menores:</strong>{' '}
+                <a href={`mailto:${REPORTS_EMAIL_ADDRESS}`} className="font-medium underline hover:text-[#0B0B0D]">
+                  {REPORTS_EMAIL_ADDRESS}
                 </a>
               </p>
             </div>

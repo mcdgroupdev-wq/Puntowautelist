@@ -10,7 +10,7 @@ import {
   Users,
 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { type FormEvent, useId, useState } from 'react';
+import { type FormEvent, type MouseEvent, useId, useState } from 'react';
 import { isValidEmail, normalizeEmail, PUNTO_BRAND } from '../config/punto';
 import { supabase } from '../lib/supabase';
 import { AnimatedCounter } from './AnimatedCounter';
@@ -20,12 +20,14 @@ interface WaitlistViewProps {
   count: number | null;
   loadingCount: boolean;
   onSuccess: () => Promise<void> | void;
+  onNavigate?: (path: string) => void;
 }
 
 export function WaitlistView({
   count,
   loadingCount,
   onSuccess,
+  onNavigate,
 }: WaitlistViewProps) {
   const emailInputId = useId();
   const feedbackMessageId = useId();
@@ -355,11 +357,29 @@ export function WaitlistView({
           ·
         </span>
         <nav aria-label="Legal" className="flex items-center gap-2 text-[11.5px] font-medium text-[#71717A]">
-          <a href="/privacidad" className="transition-colors hover:text-[#0B0B0D]">
+          <a
+            href="/privacidad"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/privacidad');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
             Privacidad
           </a>
           <span aria-hidden="true">·</span>
-          <a href="/terminos" className="transition-colors hover:text-[#0B0B0D]">
+          <a
+            href="/terminos"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/terminos');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
             Términos
           </a>
         </nav>

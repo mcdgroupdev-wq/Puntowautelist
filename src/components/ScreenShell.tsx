@@ -7,10 +7,10 @@ interface ScreenShellProps {
 
 export function ScreenShell({ children, wide = false }: ScreenShellProps) {
   return (
-    <div className="relative z-10 flex min-h-dvh w-full items-center justify-center sm:px-6 sm:py-8">
+    <div className="relative z-10 flex min-h-dvh w-full items-center justify-center sm:px-6 sm:py-6">
       <div
-        className={`relative flex min-h-dvh w-full flex-col overflow-hidden bg-transparent sm:min-h-[730px] sm:rounded-[44px] sm:border sm:border-black/[0.05] sm:bg-white/90 sm:backdrop-blur-xl sm:shadow-[0_24px_70px_rgba(15,23,42,0.08),0_4px_16px_rgba(15,23,42,0.03),inset_0_1px_0_rgba(255,255,255,1)] ${
-          wide ? 'sm:max-w-[600px]' : 'sm:max-w-[420px]'
+        className={`relative flex min-h-dvh w-full flex-col overflow-hidden bg-transparent sm:min-h-[660px] sm:rounded-[40px] sm:border sm:border-black/[0.05] sm:bg-white/92 sm:backdrop-blur-xl sm:shadow-[0_24px_70px_rgba(15,23,42,0.08),0_4px_16px_rgba(15,23,42,0.03),inset_0_1px_0_rgba(255,255,255,1)] ${
+          wide ? 'sm:max-w-[600px]' : 'sm:max-w-[432px]'
         }`}
       >
         {/* Ondas muy sutiles en tarjetas de desktop/tablet */}
@@ -52,7 +52,7 @@ export function ScreenShell({ children, wide = false }: ScreenShellProps) {
           />
         </svg>
 
-        <div className="relative z-10 flex flex-1 flex-col justify-between px-6 py-7 sm:px-7 sm:py-9">
+        <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-7 sm:py-8">
           {children}
         </div>
       </div>

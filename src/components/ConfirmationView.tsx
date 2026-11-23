@@ -1,5 +1,6 @@
 import { ArrowUpRight, Bell } from 'lucide-react';
 import { motion } from 'motion/react';
+import type { MouseEvent } from 'react';
 import { PUNTO_BRAND } from '../config/punto';
 import { AnimatedCounter } from './AnimatedCounter';
 import { PuntoBrandMark } from './PuntoLogo';
@@ -7,6 +8,7 @@ import { PuntoBrandMark } from './PuntoLogo';
 interface ConfirmationViewProps {
   count: number | null;
   onBack: () => void;
+  onNavigate?: (path: string) => void;
 }
 
 function PeopleTrioIllustration() {
@@ -93,6 +95,7 @@ function SocialIcon({ id }: { id: 'tiktok' | 'instagram' | 'youtube' }) {
 export function ConfirmationView({
   count,
   onBack,
+  onNavigate,
 }: ConfirmationViewProps) {
   return (
     <motion.div
@@ -330,11 +333,29 @@ export function ConfirmationView({
           ·
         </span>
         <nav aria-label="Legal" className="flex items-center gap-2 text-[11.5px] font-medium text-[#52525B]">
-          <a href="/privacidad" className="transition-colors hover:text-[#0B0B0D]">
+          <a
+            href="/privacidad"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/privacidad');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
             Privacidad
           </a>
           <span aria-hidden="true">·</span>
-          <a href="/terminos" className="transition-colors hover:text-[#0B0B0D]">
+          <a
+            href="/terminos"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/terminos');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
             Términos
           </a>
         </nav>

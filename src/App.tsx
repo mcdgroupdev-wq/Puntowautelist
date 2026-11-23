@@ -3,12 +3,30 @@ import { useCallback, useEffect, useState } from 'react';
 import { AmbientBackdrop } from './components/AmbientBackdrop';
 import { ConfirmationView } from './components/ConfirmationView';
 import { IntroSequence } from './components/IntroSequence';
+import { NotFoundPage } from './components/NotFoundPage';
+import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 import { ScreenShell } from './components/ScreenShell';
+import { TermsPage } from './components/TermsPage';
 import { UnsubscribeView } from './components/UnsubscribeView';
 import { WaitlistView } from './components/WaitlistView';
 import { supabase } from './lib/supabase';
 
 type AppScreen = 'intro' | 'waitlist' | 'confirmation' | 'unsubscribe';
+
+function normalizePathname(rawPath: string): string {
+  if (!rawPath || rawPath === '/') {
+    return '/';
+  }
+  const trimmed = rawPath.replace(/\/+$/, '');
+  return trimmed || '/';
+}
+
+function getCurrentPathname(): string {
+  if (typeof window === 'undefined') {
+    return '/';
+  }
+  return normalizePathname(window.location.pathname);
+}
 
 function getUnsubscribeTokenFromUrl(): string | null {
   if (typeof window === 'undefined') {
@@ -27,6 +45,7 @@ function getInitialScreen(): AppScreen {
 }
 
 export default function App() {
+  const [pathname, setPathname] = useState<string>(() => getCurrentPathname());
   const [unsubscribeToken, setUnsubscribeToken] = useState<string | null>(() =>
     getUnsubscribeTokenFromUrl(),
   );
@@ -34,6 +53,41 @@ export default function App() {
 
   const [count, setCount] = useState<number | null>(null);
   const [loadingCount, setLoadingCount] = useState<boolean>(true);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setPathname(getCurrentPathname());
+      setUnsubscribeToken(getUnsubscribeTokenFromUrl());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    if (pathname === '/privacidad') {
+      document.title = 'Política de privacidad — Punto | MCD Group';
+    } else if (pathname === '/terminos') {
+      document.title = 'Términos y condiciones — Punto | MCD Group';
+    } else if (pathname !== '/') {
+      document.title = 'Página no encontrada — Punto | MCD Group';
+    } else {
+      document.title = 'Punto — Lista de espera | MCD Group';
+    }
+  }, [pathname]);
+
+  const navigate = useCallback((targetPath: string) => {
+    const normalized = normalizePathname(targetPath);
+    if (typeof window !== 'undefined' && normalizePathname(window.location.pathname) !== normalized) {
+      window.history.pushState({}, '', normalized);
+    }
+    setPathname(normalized);
+    if (normalized === '/' && screen === 'intro') {
+      setScreen('waitlist');
+    }
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [screen]);
 
   const loadWaitlistCount = useCallback(async () => {
     if (!supabase) {
@@ -61,11 +115,14 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (pathname !== '/') {
+      return;
+    }
     loadWaitlistCount();
-  }, [loadWaitlistCount]);
+  }, [pathname, loadWaitlistCount]);
 
   useEffect(() => {
-    if (screen !== 'waitlist' && screen !== 'confirmation') {
+    if (pathname !== '/' || (screen !== 'waitlist' && screen !== 'confirmation')) {
       return;
     }
     const handleFocus = () => {
@@ -73,7 +130,7 @@ export default function App() {
     };
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
-  }, [screen, loadWaitlistCount]);
+  }, [pathname, screen, loadWaitlistCount]);
 
   const handleIntroComplete = useCallback(() => {
     setScreen((prev) => (prev === 'intro' ? 'waitlist' : prev));
@@ -95,6 +152,18 @@ export default function App() {
     setScreen('waitlist');
   }, [unsubscribeToken, loadWaitlistCount]);
 
+  if (pathname === '/privacidad') {
+    return <PrivacyPolicyPage onNavigate={navigate} />;
+  }
+
+  if (pathname === '/terminos') {
+    return <TermsPage onNavigate={navigate} />;
+  }
+
+  if (pathname !== '/') {
+    return <NotFoundPage onNavigate={navigate} />;
+  }
+
   return (
     <div className="relative min-h-dvh overflow-x-hidden bg-[#E9ECF2] text-[#0B0B0D]">
       <AmbientBackdrop />
@@ -111,6 +180,7 @@ export default function App() {
               count={count}
               loadingCount={loadingCount}
               onSuccess={handleRegistrationSuccess}
+              onNavigate={navigate}
             />
           )}
 
@@ -119,6 +189,7 @@ export default function App() {
               key="confirmation"
               count={count}
               onBack={handleBackToWaitlist}
+              onNavigate={navigate}
             />
           )}
 
@@ -127,6 +198,7 @@ export default function App() {
               key="unsubscribe"
               token={unsubscribeToken}
               onGoHome={handleBackToWaitlist}
+              onNavigate={navigate}
             />
           )}
         </AnimatePresence>

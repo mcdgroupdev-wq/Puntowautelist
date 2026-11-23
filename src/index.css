@@ -10,6 +10,9 @@
     font-family: var(--font-sans);
     background-color: #f7f8fa;
     color: #0b0b0d;
+    scroll-behavior: smooth;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -17,6 +20,14 @@
 
   h1, h2, h3, .font-display {
     font-family: var(--font-display);
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #0b0b0d;
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+    transition: background-color 9999s ease-in-out 0s;
   }
 }
 

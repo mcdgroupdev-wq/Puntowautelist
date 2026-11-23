@@ -43,9 +43,9 @@ function ConvergingMatchCard({
         scale: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] },
         y: { duration: 7, repeat: Infinity, ease: 'easeInOut', delay },
       }}
-      className="w-[248px] rounded-[28px] border border-black/[0.04] bg-white/70 p-4 shadow-[0_12px_34px_rgba(15,23,42,0.04)] backdrop-blur-md"
+      className="w-[244px] rounded-[28px] border border-black/[0.04] bg-white/75 p-4 shadow-[0_12px_34px_rgba(15,23,42,0.04)] backdrop-blur-md"
     >
-      <div className="relative mx-auto flex h-[120px] w-[204px] items-center justify-center">
+      <div className="relative mx-auto flex h-[132px] w-[204px] items-center justify-center">
         <motion.div
           animate={{
             scale: [0.6, 0.75, 1.5, 1.85, 0.6, 0.6],
@@ -58,14 +58,14 @@ function ConvergingMatchCard({
 
         <motion.div
           animate={{
-            x: [-32, -26, 0, 0, -28, -32],
-            y: [-18, -15, 0, 0, -16, -18],
+            x: [-30, -24, 0, 0, -26, -30],
+            y: [-16, -13, 0, 0, -14, -16],
             scale: [0.92, 0.95, 1.02, 1, 0.94, 0.92],
           }}
           transition={{ duration, times, repeat: Infinity, ease: [0.16, 1, 0.3, 1], delay }}
-          className="relative -mr-3 -mt-5 flex flex-col items-center"
+          className="relative -mr-3 -mt-6 flex flex-col items-center"
         >
-          <div className="h-[70px] w-[70px] overflow-hidden rounded-full border-[2.5px] border-white bg-[#F0F1F4] shadow-[0_6px_18px_rgba(0,0,0,0.07)]">
+          <div className="h-[66px] w-[66px] overflow-hidden rounded-full border-[2.5px] border-white bg-[#F0F1F4] shadow-[0_6px_18px_rgba(0,0,0,0.07)]">
             <img
               src={leftSrc}
               alt={leftName}
@@ -76,7 +76,7 @@ function ConvergingMatchCard({
           <motion.span
             animate={{ opacity: [0.75, 0.75, 0, 0, 0.6, 0.75] }}
             transition={{ duration, times, repeat: Infinity, delay }}
-            className="mt-1 text-[10px] font-medium text-[#71717A]"
+            className="mt-1.5 text-[10px] font-medium text-[#71717A]"
           >
             {leftName}
           </motion.span>
@@ -84,14 +84,14 @@ function ConvergingMatchCard({
 
         <motion.div
           animate={{
-            x: [32, 26, 0, 0, 28, 32],
-            y: [18, 15, 0, 0, 16, 18],
+            x: [30, 24, 0, 0, 26, 30],
+            y: [16, 13, 0, 0, 14, 16],
             scale: [0.92, 0.95, 1.02, 1, 0.94, 0.92],
           }}
           transition={{ duration, times, repeat: Infinity, ease: [0.16, 1, 0.3, 1], delay }}
-          className="relative -ml-3 mt-5 flex flex-col items-center"
+          className="relative -ml-3 mt-6 flex flex-col items-center"
         >
-          <div className="h-[70px] w-[70px] overflow-hidden rounded-full border-[2.5px] border-white bg-[#F0F1F4] shadow-[0_6px_18px_rgba(0,0,0,0.07)]">
+          <div className="h-[66px] w-[66px] overflow-hidden rounded-full border-[2.5px] border-white bg-[#F0F1F4] shadow-[0_6px_18px_rgba(0,0,0,0.07)]">
             <img
               src={rightSrc}
               alt={rightName}
@@ -102,7 +102,7 @@ function ConvergingMatchCard({
           <motion.span
             animate={{ opacity: [0.75, 0.75, 0, 0, 0.6, 0.75] }}
             transition={{ duration, times, repeat: Infinity, delay }}
-            className="mt-1 text-[10px] font-medium text-[#71717A]"
+            className="mt-1.5 text-[10px] font-medium text-[#71717A]"
           >
             {rightName}
           </motion.span>
@@ -115,9 +115,9 @@ function ConvergingMatchCard({
             rotate: [-12, -10, 0, 0, -10, -12],
           }}
           transition={{ duration, times, repeat: Infinity, ease: [0.16, 1, 0.3, 1], delay }}
-          className="absolute z-20 flex h-11 w-11 items-center justify-center rounded-full border-[2.5px] border-white bg-[#141417] shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
+          className="absolute z-20 flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-white bg-[#141417] shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
         >
-          <PuntoSymbol size={26} tone="light" />
+          <PuntoSymbol size={24} tone="light" />
         </motion.div>
       </div>
 
@@ -127,7 +127,7 @@ function ConvergingMatchCard({
           y: [3, 2, 0, 0, 2, 3],
         }}
         transition={{ duration, times, repeat: Infinity, ease: [0.16, 1, 0.3, 1], delay }}
-        className="mt-1 text-center"
+        className="mt-1.5 text-center"
       >
         <p className="font-display text-[14.5px] font-bold tracking-[-0.025em] text-[#18181B]">
           {headline}
@@ -410,7 +410,7 @@ export function AmbientBackdrop() {
           />
         </svg>
 
-        <div className="absolute top-2 left-1 opacity-60">
+        <div className="absolute -top-2 -left-4 scale-[0.82] opacity-35">
           <MobileBackgroundMatchCluster
             leftSrc={CREATOR_ONE}
             rightSrc={CREATOR_TWO}
@@ -423,12 +423,12 @@ export function AmbientBackdrop() {
         <motion.div
           animate={{ y: [-4, 4, -4], rotate: [-6, 6, -6] }}
           transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-7 right-4 opacity-35"
+          className="absolute top-6 right-5 opacity-25"
         >
-          <PuntoSymbol size={32} />
+          <PuntoSymbol size={28} />
         </motion.div>
 
-        <div className="absolute right-2 bottom-5 opacity-60">
+        <div className="absolute -right-2 bottom-2 scale-[0.82] opacity-30">
           <MobileBackgroundMatchCluster
             leftSrc={CREATOR_THREE}
             rightSrc={CREATOR_FOUR}
@@ -441,15 +441,15 @@ export function AmbientBackdrop() {
         <motion.div
           animate={{ y: [4, -4, 4] }}
           transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-11 left-4 flex items-center gap-2 rounded-full border border-black/[0.04] bg-white/75 py-1 pr-3 pl-1 shadow-xs backdrop-blur-sm opacity-60"
+          className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full border border-black/[0.04] bg-white/70 py-1 pr-2.5 pl-1 shadow-xs backdrop-blur-sm opacity-35"
         >
           <img
             src={CREATOR_ONE}
             alt=""
             referrerPolicy="no-referrer"
-            className="h-6 w-6 rounded-full object-cover saturate-[0.75]"
+            className="h-5 w-5 rounded-full object-cover saturate-[0.75]"
           />
-          <span className="text-[10px] font-medium text-[#3F3F46]">Lumen · Match</span>
+          <span className="text-[9.5px] font-medium text-[#3F3F46]">Lumen · Match</span>
         </motion.div>
       </div>
 
@@ -480,9 +480,9 @@ export function AmbientBackdrop() {
         />
       </svg>
 
-      {/* Escenas laterales discretas y suaves en desktop */}
-      <div className="hidden lg:block">
-        <div className="absolute top-[7%] left-[3%] xl:left-[6%]">
+      {/* Escenas laterales discretas y centradas para monitores web */}
+      <div className="mx-auto hidden h-full max-w-[1340px] lg:relative lg:block">
+        <div className="absolute top-[7%] left-6 xl:left-10">
           <ConvergingMatchCard
             leftSrc={CREATOR_ONE}
             leftName="Javier"
@@ -495,11 +495,11 @@ export function AmbientBackdrop() {
           />
         </div>
 
-        <div className="absolute bottom-[7%] left-[4%] xl:left-[8%]">
+        <div className="absolute bottom-[7%] left-8 xl:left-14">
           <DiscoverProfileFloatCard />
         </div>
 
-        <div className="absolute top-[8%] right-[3%] xl:right-[6%]">
+        <div className="absolute top-[8%] right-6 xl:right-10">
           <ConvergingMatchCard
             leftSrc={CREATOR_THREE}
             leftName="Mateo"
@@ -512,24 +512,24 @@ export function AmbientBackdrop() {
           />
         </div>
 
-        <div className="absolute bottom-[7%] right-[4%] xl:right-[8%]">
+        <div className="absolute bottom-[7%] right-8 xl:right-14">
           <ActiveMatchesFeedCard />
         </div>
 
         <motion.div
           animate={{ y: [-8, 8, -8], rotate: [-8, 8, -8] }}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-[48%] left-[15%] opacity-25"
+          className="absolute top-[48%] left-[16%] opacity-25"
         >
-          <PuntoSymbol size={42} />
+          <PuntoSymbol size={40} />
         </motion.div>
 
         <motion.div
           animate={{ y: [8, -8, 8], rotate: [8, -8, 8] }}
           transition={{ duration: 9.5, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-[48%] right-[15%] opacity-25"
+          className="absolute top-[48%] right-[16%] opacity-25"
         >
-          <PuntoSymbol size={44} />
+          <PuntoSymbol size={42} />
         </motion.div>
       </div>
 

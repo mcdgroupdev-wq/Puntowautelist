@@ -1,14 +1,16 @@
 import { Check } from 'lucide-react';
 import { motion } from 'motion/react';
+import type { MouseEvent } from 'react';
 import { PUNTO_BRAND } from '../config/punto';
 import { PuntoBrandMark } from './PuntoLogo';
 
 interface UnsubscribeViewProps {
   token: string;
   onGoHome: () => void;
+  onNavigate?: (path: string) => void;
 }
 
-export function UnsubscribeView({ onGoHome }: UnsubscribeViewProps) {
+export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 24 }}
@@ -54,11 +56,29 @@ export function UnsubscribeView({ onGoHome }: UnsubscribeViewProps) {
           ·
         </span>
         <nav aria-label="Legal" className="flex items-center gap-2 text-[11.5px] font-medium text-[#71717A]">
-          <a href="/privacidad" className="transition-colors hover:text-[#0B0B0D]">
+          <a
+            href="/privacidad"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/privacidad');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
             Privacidad
           </a>
           <span aria-hidden="true">·</span>
-          <a href="/terminos" className="transition-colors hover:text-[#0B0B0D]">
+          <a
+            href="/terminos"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/terminos');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
             Términos
           </a>
         </nav>

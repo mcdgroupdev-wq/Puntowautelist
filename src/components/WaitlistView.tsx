@@ -133,65 +133,180 @@ export function WaitlistView({
             className="font-display text-[32px] leading-[1.07] font-bold tracking-[-0.035em] text-[#0B0B0D] sm:text-[34px]"
             style={{ textWrap: 'balance' }}
           >
-            Punto: sé de los{' '}
-            <span className="block text-[#6E727D]">primeros en llegar.</span>
+            Punto
+            <span className="mt-1 block text-[21px] leading-[1.2] font-semibold tracking-[-0.025em] text-[#6E727D] sm:text-[23px]">
+              Encuentra a tu cofundador.
+            </span>
           </h1>
 
-          <p className="mx-auto mt-3.5 max-w-[36ch] text-[13.5px] leading-[1.52] text-[#52525B]">
-            Estamos preparando una nueva forma de conectar con personas, encontrar colaboradores y
-            crear proyectos juntos. Únete a la lista de espera y descubre Punto antes que nadie.
+          <p className="mx-auto mt-3 max-w-[38ch] text-[13.5px] leading-[1.55] text-[#52525B]">
+            Punto es una app para emprendedores que quieren encontrar cofundadores, socios y
+            colaboradores para crear proyectos juntos.
           </p>
         </motion.div>
 
-        {/* Tarjeta del contador con micro-elevación */}
-        <motion.div
-          initial={{ opacity: 0, y: 14, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          whileHover={{ y: -2, transition: { duration: 0.2 } }}
-          className="mt-6"
+        {/* Sección visible arriba del formulario: ¿Qué es Punto? */}
+        <section
+          aria-labelledby="que-es-punto-heading"
+          className="mt-5 text-left"
         >
-          <div className="mx-auto flex w-full max-w-[300px] items-center justify-between gap-3 rounded-[22px] border border-white bg-white/88 px-4 py-3 shadow-[0_10px_28px_rgba(15,23,42,0.06)] backdrop-blur-md">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#ECEEF2] text-[#0B0B0D]">
-                <Users className="h-[18px] w-[18px]" strokeWidth={2.1} aria-hidden="true" />
-              </div>
-              <div className="min-w-0 text-left">
-                <div className="flex items-baseline gap-2">
-                  <AnimatedCounter
-                    value={count}
-                    loading={loadingCount}
-                    className="font-display text-[22px] font-bold leading-none tracking-[-0.025em] text-[#0B0B0D]"
-                  />
+          <div className="rounded-[24px] border border-white bg-white/88 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.05)] backdrop-blur-md sm:p-5">
+            <h2
+              id="que-es-punto-heading"
+              className="font-display text-[18px] font-bold tracking-[-0.025em] text-[#0B0B0D]"
+            >
+              ¿Qué es Punto?
+            </h2>
+
+            <div className="mt-3 space-y-2.5">
+              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
+                  <UserPlus className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
                 </div>
-                <p className="mt-1 text-[11.5px] font-medium text-[#71717A] truncate">
-                  personas en espera
-                </p>
+                <div>
+                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
+                    Crea tu perfil
+                  </h3>
+                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
+                    Comparte tus habilidades e idea
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
+                  <Sparkles className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
+                    Haz match con personas compatibles
+                  </h3>
+                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
+                    Conecta con perfiles complementarios para tu proyecto
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
+                  <MessageCircle className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
+                    Chatea y empezad a construir
+                  </h3>
+                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
+                    Hablad directamente y dad forma a vuestra idea
+                  </p>
+                </div>
               </div>
             </div>
 
-            {count !== null && (
-              <motion.div
-                animate={{ scale: [1, 1.08, 1] }}
-                transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#DCFCE7] text-[#16A34A]"
-                aria-hidden="true"
-              >
-                <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.4} />
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
+            <div className="mt-3.5 space-y-2 border-t border-black/[0.05] pt-3 text-[12px] leading-[1.5] text-[#52525B]">
+              <p>
+                <strong className="font-semibold text-[#0B0B0D]">Uso de Google Sign-In en la app:</strong>{' '}
+                Puedes iniciar sesión con Google: solo usamos tu nombre, email y foto de perfil para
+                crear tu cuenta. No publicamos nada en tu nombre. Consulta nuestra{' '}
+                <a
+                  href="/privacidad"
+                  onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+                    if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                      e.preventDefault();
+                      onNavigate('/privacidad');
+                    }
+                  }}
+                  className="font-semibold text-[#0B0B0D] underline decoration-black/25 underline-offset-2"
+                >
+                  Política de privacidad
+                </a>
+                .
+              </p>
 
-        {/* Formulario con microinteracciones */}
-        <motion.form
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
-          onSubmit={handleSubmit}
-          noValidate
-          className="mt-5 space-y-3"
-        >
+              <p className="flex items-start gap-2">
+                <ShieldCheck
+                  className="mt-0.5 h-4 w-4 shrink-0 text-[#0B0B0D]"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+                <span>
+                  <strong className="font-semibold text-[#0B0B0D]">Seguridad:</strong> moderamos las
+                  fotos y no permitimos desnudos, acoso, contenido sexual ni imágenes íntimas no
+                  consensuadas. Punto no genera imágenes por IA.
+                </span>
+              </p>
+
+              <p className="flex items-center gap-2 pt-0.5 text-[12px] font-semibold text-[#0B0B0D]">
+                <Smartphone className="h-3.5 w-3.5 shrink-0" strokeWidth={2.1} aria-hidden="true" />
+                <span>Disponible en Google Play</span>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Lista de espera opcional debajo de la información pública */}
+        <section aria-labelledby="waitlist-heading" className="mt-6 border-t border-black/[0.06] pt-5">
+          <div className="text-center">
+            <h2
+              id="waitlist-heading"
+              className="font-display text-[17px] font-bold tracking-[-0.02em] text-[#0B0B0D]"
+            >
+              Únete a la lista de espera (opcional)
+            </h2>
+            <p className="mx-auto mt-1 max-w-[36ch] text-[12px] leading-[1.45] text-[#52525B]">
+              Acceso abierto sin registro. Si quieres recibir un aviso por correo con novedades de
+              Punto, apúntate aquí:
+            </p>
+          </div>
+
+          {/* Tarjeta del contador con micro-elevación */}
+          <motion.div
+            initial={{ opacity: 0, y: 14, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -2, transition: { duration: 0.2 } }}
+            className="mt-4"
+          >
+            <div className="mx-auto flex w-full max-w-[300px] items-center justify-between gap-3 rounded-[22px] border border-white bg-white/88 px-4 py-3 shadow-[0_10px_28px_rgba(15,23,42,0.06)] backdrop-blur-md">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#ECEEF2] text-[#0B0B0D]">
+                  <Users className="h-[18px] w-[18px]" strokeWidth={2.1} aria-hidden="true" />
+                </div>
+                <div className="min-w-0 text-left">
+                  <div className="flex items-baseline gap-2">
+                    <AnimatedCounter
+                      value={count}
+                      loading={loadingCount}
+                      className="font-display text-[22px] font-bold leading-none tracking-[-0.025em] text-[#0B0B0D]"
+                    />
+                  </div>
+                  <p className="mt-1 text-[11.5px] font-medium text-[#71717A] truncate">
+                    personas en espera
+                  </p>
+                </div>
+              </div>
+
+              {count !== null && (
+                <motion.div
+                  animate={{ scale: [1, 1.08, 1] }}
+                  transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#DCFCE7] text-[#16A34A]"
+                  aria-hidden="true"
+                >
+                  <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.4} />
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Formulario con microinteracciones */}
+          <motion.form
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            onSubmit={handleSubmit}
+            noValidate
+            className="mt-4 space-y-3"
+          >
           <div>
             <label htmlFor={emailInputId} className="sr-only">
               Tu correo electrónico
@@ -407,94 +522,6 @@ export function WaitlistView({
             <span>Te avisaremos cuando Punto esté listo</span>
           </p>
         </motion.form>
-
-        {/* Sección visible: ¿Qué es Punto? */}
-        <section
-          aria-labelledby="que-es-punto-heading"
-          className="mt-7 border-t border-black/[0.06] pt-6 text-left"
-        >
-          <div className="rounded-[24px] border border-white bg-white/88 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.05)] backdrop-blur-md sm:p-5">
-            <h2
-              id="que-es-punto-heading"
-              className="font-display text-[19px] font-bold tracking-[-0.025em] text-[#0B0B0D]"
-            >
-              ¿Qué es Punto?
-            </h2>
-
-            <p className="mt-2 text-[13px] leading-[1.55] text-[#52525B]">
-              Punto es una app para emprendedores que quieren encontrar cofundadores, socios y
-              colaboradores para crear proyectos juntos.
-            </p>
-
-            <div className="mt-4 space-y-2.5">
-              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
-                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
-                  <UserPlus className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
-                    Crea tu perfil
-                  </h3>
-                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
-                    Comparte tus habilidades e idea
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
-                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
-                  <Sparkles className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
-                    Haz match con personas compatibles
-                  </h3>
-                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
-                    Conecta con perfiles complementarios para tu proyecto
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
-                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
-                  <MessageCircle className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
-                    Chatea y empezad a construir
-                  </h3>
-                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
-                    Hablad directamente y dad forma a vuestra idea
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 space-y-2.5 border-t border-black/[0.05] pt-3.5 text-[12px] leading-[1.52] text-[#52525B]">
-              <p>
-                <strong className="font-semibold text-[#0B0B0D]">Inicio de sesión en la app:</strong>{' '}
-                Puedes iniciar sesión con Google: solo usamos tu nombre, email y foto de perfil para
-                crear tu cuenta. No publicamos nada en tu nombre.
-              </p>
-
-              <p className="flex items-start gap-2">
-                <ShieldCheck
-                  className="mt-0.5 h-4 w-4 shrink-0 text-[#0B0B0D]"
-                  strokeWidth={2}
-                  aria-hidden="true"
-                />
-                <span>
-                  <strong className="font-semibold text-[#0B0B0D]">Seguridad:</strong> moderamos las
-                  fotos y no permitimos desnudos, acoso ni contenido sexual.
-                </span>
-              </p>
-
-              <p className="flex items-center gap-2 pt-0.5 text-[12px] font-semibold text-[#0B0B0D]">
-                <Smartphone className="h-3.5 w-3.5 shrink-0" strokeWidth={2.1} aria-hidden="true" />
-                <span>Disponible en Google Play</span>
-              </p>
-            </div>
-          </div>
         </section>
       </main>
 

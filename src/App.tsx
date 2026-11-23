@@ -42,7 +42,7 @@ function getInitialScreen(): AppScreen {
   if (getUnsubscribeTokenFromUrl()) {
     return 'unsubscribe';
   }
-  return 'intro';
+  return 'waitlist';
 }
 
 export default function App() {

@@ -262,8 +262,8 @@ function DiscoverProfileFloatCard() {
 
       <div className="mt-2.5 flex items-center justify-between gap-2 px-1">
         <div className="min-w-0 text-left">
-          <p className="text-[11px] font-semibold text-[#18181B] truncate">Lumen · AI Planner</p>
-          <p className="text-[10px] text-[#86868B] truncate">Flutter · React · AI</p>
+          <p className="text-[11px] font-semibold text-[#18181B] truncate">Punto · Cofundador</p>
+          <p className="text-[10px] text-[#86868B] truncate">Flutter · React · Producto</p>
         </div>
         <motion.div
           animate={{ scale: [1, 1.08, 1] }}
@@ -279,9 +279,9 @@ function DiscoverProfileFloatCard() {
 
 function ActiveMatchesFeedCard() {
   const items = [
-    { name: 'Lumen', role: 'Maya · Designer', img: CREATOR_TWO },
-    { name: 'Relay', role: 'Mateo · Product', img: CREATOR_THREE },
-    { name: 'Nook', role: 'Lucía · Frontend', img: CREATOR_FOUR },
+    { name: 'Producto', role: 'Maya · Diseño UX', img: CREATOR_TWO },
+    { name: 'Desarrollo', role: 'Mateo · Full Stack', img: CREATOR_THREE },
+    { name: 'Negocio', role: 'Lucía · Estrategia', img: CREATOR_FOUR },
   ];
 
   return (
@@ -414,7 +414,7 @@ export function AmbientBackdrop() {
           <MobileBackgroundMatchCluster
             leftSrc={CREATOR_ONE}
             rightSrc={CREATOR_TWO}
-            label="It's a Match"
+            label="Conexión Punto"
             duration={7.2}
             delay={0}
           />
@@ -432,7 +432,7 @@ export function AmbientBackdrop() {
           <MobileBackgroundMatchCluster
             leftSrc={CREATOR_THREE}
             rightSrc={CREATOR_FOUR}
-            label="Nuevo Match"
+            label="Nuevo equipo"
             duration={7.8}
             delay={1.8}
           />
@@ -449,7 +449,7 @@ export function AmbientBackdrop() {
             referrerPolicy="no-referrer"
             className="h-5 w-5 rounded-full object-cover saturate-[0.75]"
           />
-          <span className="text-[9.5px] font-medium text-[#3F3F46]">Lumen · Match</span>
+          <span className="text-[9.5px] font-medium text-[#3F3F46]">Punto · Conexión</span>
         </motion.div>
       </div>
 
@@ -488,8 +488,8 @@ export function AmbientBackdrop() {
             leftName="Javier"
             rightSrc={CREATOR_TWO}
             rightName="Maya"
-            headline="It's a Match"
-            subtitle="Quieren crear Lumen juntos"
+            headline="Nueva conexión"
+            subtitle="Quieren crear un proyecto juntos"
             duration={7.8}
             delay={0}
           />
@@ -505,7 +505,7 @@ export function AmbientBackdrop() {
             leftName="Mateo"
             rightSrc={CREATOR_FOUR}
             rightName="Lucía"
-            headline="It's a Match"
+            headline="Nuevo equipo"
             subtitle="Conectando Producto & Diseño"
             duration={8.4}
             delay={2.6}
@@ -541,8 +541,8 @@ export function AmbientBackdrop() {
             leftName="Javier"
             rightSrc={CREATOR_TWO}
             rightName="Maya"
-            headline="It's a Match"
-            subtitle="Lumen"
+            headline="Nueva conexión"
+            subtitle="Punto"
             duration={7.8}
             delay={0}
           />
@@ -553,8 +553,8 @@ export function AmbientBackdrop() {
             leftName="Mateo"
             rightSrc={CREATOR_FOUR}
             rightName="Lucía"
-            headline="It's a Match"
-            subtitle="Nook"
+            headline="Nuevo equipo"
+            subtitle="Punto"
             duration={8.4}
             delay={2.2}
           />

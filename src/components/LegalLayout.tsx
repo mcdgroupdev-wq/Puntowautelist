@@ -8,7 +8,7 @@ import { PuntoBrandMark } from './PuntoLogo';
 interface LegalLayoutProps {
   children: ReactNode;
   onNavigate: (path: string) => void;
-  activePath: '/privacidad' | '/terminos' | '/aviso-legal';
+  activePath: '/privacidad' | '/terminos' | '/aviso-legal' | '/seguridad-infantil';
 }
 
 export function LegalLayout({ children, onNavigate, activePath }: LegalLayoutProps) {
@@ -92,6 +92,20 @@ export function LegalLayout({ children, onNavigate, activePath }: LegalLayoutPro
                 }`}
               >
                 Términos
+              </a>
+              <span aria-hidden="true" className="text-[#D4D4D8]">
+                ·
+              </span>
+              <a
+                href="/seguridad-infantil"
+                onClick={(e) => handleInternalLink(e, '/seguridad-infantil')}
+                className={`transition-colors ${
+                  activePath === '/seguridad-infantil'
+                    ? 'font-semibold text-[#0B0B0D]'
+                    : 'text-[#71717A] hover:text-[#0B0B0D]'
+                }`}
+              >
+                Seguridad infantil
               </a>
               <span aria-hidden="true" className="text-[#D4D4D8]">
                 ·

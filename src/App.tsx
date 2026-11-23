@@ -1,6 +1,7 @@
 import { AnimatePresence } from 'motion/react';
 import { useCallback, useEffect, useState } from 'react';
 import { AmbientBackdrop } from './components/AmbientBackdrop';
+import { ChildSafetyPage } from './components/ChildSafetyPage';
 import { ConfirmationView } from './components/ConfirmationView';
 import { IntroSequence } from './components/IntroSequence';
 import { LegalNoticePage } from './components/LegalNoticePage';
@@ -81,6 +82,10 @@ export default function App() {
       title = 'Aviso legal – Punto';
       description =
         'Aviso legal e información identificativa de Punto y MCD Group conforme a la LSSI-CE.';
+    } else if (pathname === '/seguridad-infantil') {
+      title = 'Estándares de seguridad infantil – Punto';
+      description =
+        'Estándares de seguridad infantil de PUNTO (MCD Group): directrices sobre conductas prohibidas y protocolos de denuncia CSAE/CSAM.';
     } else if (pathname !== '/') {
       title = 'Página no encontrada – Punto';
     }
@@ -179,6 +184,10 @@ export default function App() {
 
   if (pathname === '/aviso-legal') {
     return <LegalNoticePage onNavigate={navigate} />;
+  }
+
+  if (pathname === '/seguridad-infantil') {
+    return <ChildSafetyPage onNavigate={navigate} />;
   }
 
   if (pathname !== '/') {

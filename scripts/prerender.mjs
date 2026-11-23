@@ -36,6 +36,13 @@ const ROUTES = [
     description:
       'Aviso legal e información identificativa de Punto y MCD Group conforme a la LSSI-CE.',
   },
+  {
+    route: '/seguridad-infantil',
+    outFile: path.join(distDir, 'seguridad-infantil', 'index.html'),
+    title: 'Estándares de seguridad infantil – Punto',
+    description:
+      'Estándares de seguridad infantil de PUNTO (MCD Group): directrices sobre conductas prohibidas y protocolos de denuncia CSAE/CSAM.',
+  },
 ];
 
 function escapeHtmlAttr(value) {

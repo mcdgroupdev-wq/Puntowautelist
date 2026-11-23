@@ -560,6 +560,19 @@ export function WaitlistView({
           </a>
           <span aria-hidden="true">·</span>
           <a
+            href="/seguridad-infantil"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/seguridad-infantil');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
+            Seguridad infantil
+          </a>
+          <span aria-hidden="true">·</span>
+          <a
             href="/aviso-legal"
             onClick={(e: MouseEvent<HTMLAnchorElement>) => {
               if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {

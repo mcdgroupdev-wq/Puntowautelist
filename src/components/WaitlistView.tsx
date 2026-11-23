@@ -7,6 +7,11 @@ import {
   Heart,
   Loader2,
   Mail,
+  MessageCircle,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  UserPlus,
   Users,
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -128,8 +133,8 @@ export function WaitlistView({
             className="font-display text-[32px] leading-[1.07] font-bold tracking-[-0.035em] text-[#0B0B0D] sm:text-[34px]"
             style={{ textWrap: 'balance' }}
           >
-            Sé de los primeros{' '}
-            <span className="block text-[#6E727D]">en llegar.</span>
+            Punto: sé de los{' '}
+            <span className="block text-[#6E727D]">primeros en llegar.</span>
           </h1>
 
           <p className="mx-auto mt-3.5 max-w-[36ch] text-[13.5px] leading-[1.52] text-[#52525B]">
@@ -228,7 +233,7 @@ export function WaitlistView({
                     setDuplicateNotice(null);
                   }
                 }}
-                placeholder="Tu correo electrónico"
+                placeholder="Tu correo para la lista de espera"
                 aria-invalid={Boolean(errorMessage || duplicateNotice)}
                 aria-describedby={
                   errorMessage || duplicateNotice ? feedbackMessageId : undefined
@@ -236,6 +241,12 @@ export function WaitlistView({
                 className="h-full w-full bg-transparent text-[14.5px] text-[#0B0B0D] placeholder:text-[#86868B] focus:outline-none disabled:opacity-60"
               />
             </div>
+
+            <p className="mt-2 px-2 text-center text-[11.5px] leading-[1.45] text-[#52525B]">
+              Tu email se usa únicamente para la lista de espera.{' '}
+              <strong className="font-semibold text-[#0B0B0D]">No es un inicio de sesión</strong> ni
+              crea una cuenta todavía.
+            </p>
 
             {duplicateNotice && !errorMessage && (
               <motion.div
@@ -396,6 +407,95 @@ export function WaitlistView({
             <span>Te avisaremos cuando Punto esté listo</span>
           </p>
         </motion.form>
+
+        {/* Sección visible: ¿Qué es Punto? */}
+        <section
+          aria-labelledby="que-es-punto-heading"
+          className="mt-7 border-t border-black/[0.06] pt-6 text-left"
+        >
+          <div className="rounded-[24px] border border-white bg-white/88 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.05)] backdrop-blur-md sm:p-5">
+            <h2
+              id="que-es-punto-heading"
+              className="font-display text-[19px] font-bold tracking-[-0.025em] text-[#0B0B0D]"
+            >
+              ¿Qué es Punto?
+            </h2>
+
+            <p className="mt-2 text-[13px] leading-[1.55] text-[#52525B]">
+              Punto es una app para emprendedores que quieren encontrar cofundadores, socios y
+              colaboradores para crear proyectos juntos.
+            </p>
+
+            <div className="mt-4 space-y-2.5">
+              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
+                  <UserPlus className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
+                    Crea tu perfil
+                  </h3>
+                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
+                    Comparte tus habilidades e idea
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
+                  <Sparkles className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
+                    Haz match con personas compatibles
+                  </h3>
+                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
+                    Conecta con perfiles complementarios para tu proyecto
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 rounded-2xl border border-black/[0.04] bg-[#F7F8FA]/85 px-3.5 py-2.5">
+                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#0B0B0D] shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
+                  <MessageCircle className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="font-display text-[13px] font-semibold text-[#0B0B0D]">
+                    Chatea y empezad a construir
+                  </h3>
+                  <p className="text-[12px] leading-[1.45] text-[#52525B]">
+                    Hablad directamente y dad forma a vuestra idea
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-2.5 border-t border-black/[0.05] pt-3.5 text-[12px] leading-[1.52] text-[#52525B]">
+              <p>
+                <strong className="font-semibold text-[#0B0B0D]">Inicio de sesión en la app:</strong>{' '}
+                Puedes iniciar sesión con Google: solo usamos tu nombre, email y foto de perfil para
+                crear tu cuenta. No publicamos nada en tu nombre.
+              </p>
+
+              <p className="flex items-start gap-2">
+                <ShieldCheck
+                  className="mt-0.5 h-4 w-4 shrink-0 text-[#0B0B0D]"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+                <span>
+                  <strong className="font-semibold text-[#0B0B0D]">Seguridad:</strong> moderamos las
+                  fotos y no permitimos desnudos, acoso ni contenido sexual.
+                </span>
+              </p>
+
+              <p className="flex items-center gap-2 pt-0.5 text-[12px] font-semibold text-[#0B0B0D]">
+                <Smartphone className="h-3.5 w-3.5 shrink-0" strokeWidth={2.1} aria-hidden="true" />
+                <span>Disponible en Google Play</span>
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="flex w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 pt-2">

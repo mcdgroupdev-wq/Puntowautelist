@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({isSsrBuild}) => {
   return {
     plugins: [
       react(),
@@ -16,7 +16,7 @@ export default defineConfig(() => {
         name: 'copy-unbundled-src-assets',
         apply: 'build',
         closeBundle(error?: Error): void {
-          if (error) {
+          if (error || isSsrBuild) {
             return;
           }
           const distDir = path.resolve(__dirname, 'dist');

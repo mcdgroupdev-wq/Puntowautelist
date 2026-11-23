@@ -65,16 +65,30 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    let title = 'Punto – Encuentra a tu cofundador';
+    let description =
+      'Punto es una app para emprendedores que quieren encontrar cofundadores, socios y colaboradores para crear proyectos juntos. Únete a la lista de espera.';
+
     if (pathname === '/privacidad') {
-      document.title = 'Política de privacidad — Punto | MCD Group';
+      title = 'Política de privacidad – Punto';
+      description =
+        'Política de privacidad de Punto (MCD Group): información sobre cómo recopilamos, utilizamos, protegemos y gestionamos los datos de los usuarios.';
     } else if (pathname === '/terminos') {
-      document.title = 'Términos y condiciones — Punto | MCD Group';
+      title = 'Términos y condiciones – Punto';
+      description =
+        'Términos y condiciones de uso de Punto (MCD Group), la app para emprendedores que buscan cofundadores, socios y colaboradores.';
     } else if (pathname === '/aviso-legal') {
-      document.title = 'Aviso legal — Punto | MCD Group';
+      title = 'Aviso legal – Punto';
+      description =
+        'Aviso legal e información identificativa de Punto y MCD Group conforme a la LSSI-CE.';
     } else if (pathname !== '/') {
-      document.title = 'Página no encontrada — Punto | MCD Group';
-    } else {
-      document.title = 'Punto — Lista de espera | MCD Group';
+      title = 'Página no encontrada – Punto';
+    }
+
+    document.title = title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', description);
     }
   }, [pathname]);
 

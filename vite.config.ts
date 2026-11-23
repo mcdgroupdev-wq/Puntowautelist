@@ -27,7 +27,7 @@ export default defineConfig(() => {
           }
           const builtIndex = path.join(distDir, 'index.html');
           if (fs.existsSync(builtIndex)) {
-            for (const route of ['privacidad', 'terminos']) {
+            for (const route of ['privacidad', 'terminos', 'aviso-legal']) {
               const routeDir = path.join(distDir, route);
               fs.mkdirSync(routeDir, {recursive: true});
               fs.copyFileSync(builtIndex, path.join(routeDir, 'index.html'));

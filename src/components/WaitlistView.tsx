@@ -330,10 +330,59 @@ export function WaitlistView({
               </span>
             </span>
             <span className="text-[12px] leading-[1.45] text-[#52525B]">
-              Acepto recibir novedades y un correo cuando Punto esté disponible. Puedo darme de baja
+              Acepto la{' '}
+              <a
+                href="/privacidad"
+                onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+                  e.stopPropagation();
+                  if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                    e.preventDefault();
+                    onNavigate('/privacidad');
+                  }
+                }}
+                className="font-semibold text-[#0B0B0D] underline decoration-black/25 underline-offset-2 transition-colors hover:decoration-[#0B0B0D]"
+              >
+                Política de privacidad
+              </a>{' '}
+              y recibir novedades y un correo cuando Punto esté disponible. Puedo darme de baja
               cuando quiera.
             </span>
           </label>
+
+          {/* Primera capa informativa RGPD / LOPDGDD */}
+          <div className="rounded-2xl border border-black/[0.05] bg-white/70 px-3.5 py-2.5 text-left text-[11px] leading-[1.48] text-[#52525B]">
+            <p className="font-semibold text-[#27272A]">
+              Información básica sobre protección de datos
+            </p>
+            <p className="mt-1">
+              <strong className="font-semibold text-[#27272A]">Responsable:</strong> MUHAMADOU CAMARA
+              DIBBASY (MCD Group). <strong className="font-semibold text-[#27272A]">Finalidad:</strong>{' '}
+              gestionar la lista de espera y avisarte del lanzamiento de Punto.{' '}
+              <strong className="font-semibold text-[#27272A]">Legitimación:</strong> tu consentimiento.{' '}
+              <strong className="font-semibold text-[#27272A]">Derechos:</strong> acceso, rectificación,
+              supresión y retirada del consentimiento en{' '}
+              <a
+                href="mailto:mcdgroup.dev@gmail.com"
+                className="font-medium text-[#0B0B0D] underline decoration-black/25 underline-offset-2"
+              >
+                mcdgroup.dev@gmail.com
+              </a>
+              . Más detalles en{' '}
+              <a
+                href="/privacidad"
+                onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+                  if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                    e.preventDefault();
+                    onNavigate('/privacidad');
+                  }
+                }}
+                className="font-medium text-[#0B0B0D] underline decoration-black/25 underline-offset-2"
+              >
+                Privacidad
+              </a>
+              .
+            </p>
+          </div>
 
           {/* Nota inferior con latido suave */}
           <p className="flex items-center justify-center gap-1.5 pt-1 text-center text-[12px] font-medium text-[#27272A]">
@@ -349,14 +398,14 @@ export function WaitlistView({
         </motion.form>
       </main>
 
-      <footer className="flex w-full flex-wrap items-center justify-center gap-x-2.5 gap-y-1 pt-2">
+      <footer className="flex w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 pt-2">
         <p className="text-[11.5px] font-medium text-[#71717A]">
           {PUNTO_BRAND.name} <span aria-hidden="true">·</span> {PUNTO_BRAND.developer}
         </p>
         <span aria-hidden="true" className="text-[11.5px] text-[#71717A]">
           ·
         </span>
-        <nav aria-label="Legal" className="flex items-center gap-2 text-[11.5px] font-medium text-[#71717A]">
+        <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#71717A]">
           <a
             href="/privacidad"
             onClick={(e: MouseEvent<HTMLAnchorElement>) => {
@@ -381,6 +430,19 @@ export function WaitlistView({
             className="transition-colors hover:text-[#0B0B0D]"
           >
             Términos
+          </a>
+          <span aria-hidden="true">·</span>
+          <a
+            href="/aviso-legal"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/aviso-legal');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
+            Aviso legal
           </a>
         </nav>
       </footer>

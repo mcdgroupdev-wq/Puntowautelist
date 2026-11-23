@@ -332,7 +332,7 @@ export function ConfirmationView({
         <span aria-hidden="true" className="text-[11.5px] text-[#52525B]">
           ·
         </span>
-        <nav aria-label="Legal" className="flex items-center gap-2 text-[11.5px] font-medium text-[#52525B]">
+        <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#52525B]">
           <a
             href="/privacidad"
             onClick={(e: MouseEvent<HTMLAnchorElement>) => {
@@ -357,6 +357,19 @@ export function ConfirmationView({
             className="transition-colors hover:text-[#0B0B0D]"
           >
             Términos
+          </a>
+          <span aria-hidden="true">·</span>
+          <a
+            href="/aviso-legal"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/aviso-legal');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
+            Aviso legal
           </a>
         </nav>
       </footer>

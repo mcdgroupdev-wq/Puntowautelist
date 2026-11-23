@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { AmbientBackdrop } from './components/AmbientBackdrop';
 import { ConfirmationView } from './components/ConfirmationView';
 import { IntroSequence } from './components/IntroSequence';
+import { LegalNoticePage } from './components/LegalNoticePage';
 import { NotFoundPage } from './components/NotFoundPage';
 import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 import { ScreenShell } from './components/ScreenShell';
@@ -68,6 +69,8 @@ export default function App() {
       document.title = 'Política de privacidad — Punto | MCD Group';
     } else if (pathname === '/terminos') {
       document.title = 'Términos y condiciones — Punto | MCD Group';
+    } else if (pathname === '/aviso-legal') {
+      document.title = 'Aviso legal — Punto | MCD Group';
     } else if (pathname !== '/') {
       document.title = 'Página no encontrada — Punto | MCD Group';
     } else {
@@ -158,6 +161,10 @@ export default function App() {
 
   if (pathname === '/terminos') {
     return <TermsPage onNavigate={navigate} />;
+  }
+
+  if (pathname === '/aviso-legal') {
+    return <LegalNoticePage onNavigate={navigate} />;
   }
 
   if (pathname !== '/') {

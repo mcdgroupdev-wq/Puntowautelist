@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   Check,
   CheckCircle2,
-  FileSpreadsheet,
   Heart,
   Loader2,
   Mail,
@@ -13,58 +12,20 @@ import {
 import { motion } from 'motion/react';
 import { type FormEvent, useId, useState } from 'react';
 import { isValidEmail, normalizeEmail, PUNTO_BRAND } from '../config/punto';
+import { supabase } from '../lib/supabase';
 import { AnimatedCounter } from './AnimatedCounter';
 import { PuntoBrandMark } from './PuntoLogo';
 
-const SUBMITTED_EMAILS_STORAGE_KEY = 'punto_waitlist_sent_emails';
-const MAX_LOCAL_SENT_EMAILS = 20;
-
-function loadLocallySentEmails(): string[] {
-  if (typeof window === 'undefined') {
-    return [];
-  }
-  try {
-    const raw = window.localStorage.getItem(SUBMITTED_EMAILS_STORAGE_KEY);
-    if (!raw) {
-      return [];
-    }
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed)
-      ? parsed.filter((item): item is string => typeof item === 'string')
-      : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveLocallySentEmail(normalizedEmail: string): string[] {
-  const existing = loadLocallySentEmails();
-  if (existing.includes(normalizedEmail)) {
-    return existing;
-  }
-  const updated = [normalizedEmail, ...existing].slice(0, MAX_LOCAL_SENT_EMAILS);
-  try {
-    window.localStorage.setItem(SUBMITTED_EMAILS_STORAGE_KEY, JSON.stringify(updated));
-  } catch {
-    // Ignorar errores de almacenamiento en iframe o modo privado
-  }
-  return updated;
-}
-
 interface WaitlistViewProps {
   count: number | null;
-  configured: boolean;
   loadingCount: boolean;
-  onSuccess: (updatedCount: number | null) => void;
-  onOpenSheets?: () => void;
+  onSuccess: () => Promise<void> | void;
 }
 
 export function WaitlistView({
   count,
-  configured,
   loadingCount,
   onSuccess,
-  onOpenSheets,
 }: WaitlistViewProps) {
   const emailInputId = useId();
   const feedbackMessageId = useId();
@@ -75,23 +36,6 @@ export function WaitlistView({
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [duplicateNotice, setDuplicateNotice] = useState<string | null>(null);
-  const [locallySentEmails, setLocallySentEmails] = useState<string[]>(() =>
-    loadLocallySentEmails(),
-  );
-  const [sessionDuplicateEmails, setSessionDuplicateEmails] = useState<string[]>([]);
-
-  const normalizedInput = normalizeEmail(email);
-  const isKnownDuplicate = Boolean(
-    normalizedInput &&
-      isValidEmail(normalizedInput) &&
-      (locallySentEmails.includes(normalizedInput) ||
-        sessionDuplicateEmails.includes(normalizedInput)),
-  );
-  const activeDuplicateMessage =
-    duplicateNotice ??
-    (isKnownDuplicate
-      ? 'Este correo ya fue enviado anteriormente y ya está en la lista de espera.'
-      : null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -111,14 +55,16 @@ export function WaitlistView({
       return;
     }
 
-    if (
-      locallySentEmails.includes(normalized) ||
-      sessionDuplicateEmails.includes(normalized)
-    ) {
-      setErrorMessage(null);
-      setDuplicateNotice(
-        'Este correo ya fue enviado anteriormente y ya está en la lista de espera.',
-      );
+    if (!marketingConsent) {
+      setDuplicateNotice(null);
+      setErrorMessage('Marca la casilla para continuar');
+      return;
+    }
+
+    if (!supabase) {
+      console.error('Supabase client is not initialized: missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY.');
+      setDuplicateNotice(null);
+      setErrorMessage('No pudimos completar tu registro en este momento. Inténtalo de nuevo.');
       return;
     }
 
@@ -127,45 +73,24 @@ export function WaitlistView({
     setSubmitting(true);
 
     try {
-      const response = await fetch('/api/waitlist/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: normalized,
-          marketingConsent,
-        }),
-      });
+      const { error } = await supabase
+        .from('waitlist')
+        .insert({ email: normalized, consent: true });
 
-      const payload = (await response.json().catch(() => ({}))) as {
-        ok?: boolean;
-        duplicate?: boolean;
-        count?: number | null;
-        message?: string;
-      };
-
-      if (response.status === 409 || payload.duplicate) {
-        setSessionDuplicateEmails((prev) =>
-          prev.includes(normalized) ? prev : [...prev, normalized],
-        );
-        setDuplicateNotice(
-          payload.message ||
-            'Este correo ya fue enviado anteriormente y ya está registrado en la lista de espera.',
-        );
+      if (error) {
+        if (error.code === '23505') {
+          setDuplicateNotice('¡Ya estás en la lista! 🎉');
+          return;
+        }
+        console.error(error);
+        setErrorMessage('No pudimos completar tu registro en este momento. Inténtalo de nuevo.');
         return;
       }
 
-      if (!response.ok || !payload.ok) {
-        setErrorMessage(
-          payload.message ||
-            'No pudimos completar tu registro en este momento. Inténtalo de nuevo.',
-        );
-        return;
-      }
-
-      setLocallySentEmails(saveLocallySentEmail(normalized));
-      onSuccess(typeof payload.count === 'number' ? payload.count : count);
-    } catch {
-      setErrorMessage('No pudimos conectar con el servidor. Comprueba tu conexión e inténtalo otra vez.');
+      await onSuccess();
+    } catch (err) {
+      console.error(err);
+      setErrorMessage('No pudimos completar tu registro en este momento. Inténtalo de nuevo.');
     } finally {
       setSubmitting(false);
     }
@@ -228,20 +153,17 @@ export function WaitlistView({
                 <div className="flex items-baseline gap-2">
                   <AnimatedCounter
                     value={count}
-                    configured={configured}
                     loading={loadingCount}
                     className="font-display text-[22px] font-bold leading-none tracking-[-0.025em] text-[#0B0B0D]"
                   />
                 </div>
                 <p className="mt-1 text-[11.5px] font-medium text-[#71717A] truncate">
-                  {configured
-                    ? 'personas en espera'
-                    : 'Pendiente de conexión con Supabase'}
+                  personas en espera
                 </p>
               </div>
             </div>
 
-            {configured && (
+            {count !== null && (
               <motion.div
                 animate={{ scale: [1, 1.08, 1] }}
                 transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
@@ -271,7 +193,7 @@ export function WaitlistView({
               className={`group flex h-[54px] items-center gap-3 rounded-full border bg-white/92 px-5 shadow-[0_6px_18px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-150 ${
                 errorMessage
                   ? 'border-[#DC2626]/60 ring-4 ring-[#DC2626]/[0.08]'
-                  : activeDuplicateMessage
+                  : duplicateNotice
                     ? 'border-[#D97706]/55 ring-4 ring-[#D97706]/[0.08]'
                     : 'border-white focus-within:border-[#0B0B0D]/30 focus-within:bg-white focus-within:ring-4 focus-within:ring-black/[0.05]'
               }`}
@@ -280,7 +202,7 @@ export function WaitlistView({
                 className={`h-[18px] w-[18px] shrink-0 transition-colors ${
                   errorMessage
                     ? 'text-[#DC2626]'
-                    : activeDuplicateMessage
+                    : duplicateNotice
                       ? 'text-[#B45309]'
                       : 'text-[#52525B] group-focus-within:text-[#0B0B0D]'
                 }`}
@@ -305,15 +227,15 @@ export function WaitlistView({
                   }
                 }}
                 placeholder="Tu correo electrónico"
-                aria-invalid={Boolean(errorMessage || activeDuplicateMessage)}
+                aria-invalid={Boolean(errorMessage || duplicateNotice)}
                 aria-describedby={
-                  errorMessage || activeDuplicateMessage ? feedbackMessageId : undefined
+                  errorMessage || duplicateNotice ? feedbackMessageId : undefined
                 }
                 className="h-full w-full bg-transparent text-[14.5px] text-[#0B0B0D] placeholder:text-[#86868B] focus:outline-none disabled:opacity-60"
               />
             </div>
 
-            {activeDuplicateMessage && !errorMessage && (
+            {duplicateNotice && !errorMessage && (
               <motion.div
                 id={feedbackMessageId}
                 role="status"
@@ -323,7 +245,7 @@ export function WaitlistView({
                 className="mt-2.5 flex items-start gap-2 rounded-2xl border border-[#FDE68A] bg-[#FFFBEB] px-4 py-2.5 text-[12.5px] leading-snug font-medium text-[#92400E]"
               >
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#D97706]" aria-hidden="true" />
-                <span>{activeDuplicateMessage}</span>
+                <span>{duplicateNotice}</span>
               </motion.div>
             )}
 
@@ -344,12 +266,12 @@ export function WaitlistView({
           {/* Botón negro principal con brillo sutil animado */}
           <motion.button
             type="submit"
-            disabled={submitting || isKnownDuplicate}
-            whileHover={submitting || isKnownDuplicate ? undefined : { scale: 1.01 }}
-            whileTap={submitting || isKnownDuplicate ? undefined : { scale: 0.985 }}
+            disabled={submitting}
+            whileHover={submitting ? undefined : { scale: 1.01 }}
+            whileTap={submitting ? undefined : { scale: 0.985 }}
             className="group relative flex h-[54px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-full bg-[#0A0A0C] px-6 text-[15px] font-semibold text-white shadow-[0_12px_26px_rgba(10,10,12,0.18)] transition-colors duration-150 hover:bg-[#1C1C20] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0B0B0D]/20 disabled:cursor-not-allowed disabled:opacity-60 whitespace-nowrap"
           >
-            {!submitting && !isKnownDuplicate && (
+            {!submitting && (
               <motion.span
                 aria-hidden="true"
                 animate={{ x: ['-120%', '220%'] }}
@@ -361,11 +283,6 @@ export function WaitlistView({
               <>
                 <Loader2 className="h-[18px] w-[18px] animate-spin" aria-hidden="true" />
                 <span>Procesando...</span>
-              </>
-            ) : isKnownDuplicate ? (
-              <>
-                <CheckCircle2 className="relative z-10 h-[18px] w-[18px]" strokeWidth={2} aria-hidden="true" />
-                <span className="relative z-10">Correo ya enviado</span>
               </>
             ) : (
               <>
@@ -379,7 +296,7 @@ export function WaitlistView({
             )}
           </motion.button>
 
-          {/* Casilla opcional */}
+          {/* Casilla de consentimiento */}
           <label
             htmlFor={consentCheckboxId}
             className="flex cursor-pointer items-start gap-2.5 rounded-2xl px-1.5 pt-1 text-left select-none"
@@ -390,7 +307,12 @@ export function WaitlistView({
                 type="checkbox"
                 checked={marketingConsent}
                 disabled={submitting}
-                onChange={(e) => setMarketingConsent(e.target.checked)}
+                onChange={(e) => {
+                  setMarketingConsent(e.target.checked);
+                  if (errorMessage === 'Marca la casilla para continuar') {
+                    setErrorMessage(null);
+                  }
+                }}
                 className="peer sr-only"
               />
               <span
@@ -441,16 +363,6 @@ export function WaitlistView({
             Términos
           </a>
         </nav>
-        {onOpenSheets && (
-          <button
-            type="button"
-            onClick={onOpenSheets}
-            className="inline-flex items-center gap-1 rounded-full border border-black/[0.08] bg-white/80 px-2.5 py-0.5 text-[11px] font-medium text-[#52525B] transition-colors hover:bg-white hover:text-[#0B0B0D]"
-          >
-            <FileSpreadsheet className="h-3 w-3 text-[#16A34A]" aria-hidden="true" />
-            <span>Sheets</span>
-          </button>
-        )}
       </footer>
     </motion.div>
   );

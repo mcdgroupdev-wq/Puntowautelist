@@ -57,9 +57,85 @@ function isRateLimited(ip: string, limit = 15, windowMs = 10 * 60 * 1000): boole
   return false;
 }
 
+function readEnv(name: string): string | undefined {
+  const netlifyEnv = (
+    globalThis as { Netlify?: { env?: { get?: (key: string) => string | undefined } } }
+  ).Netlify?.env;
+  const raw = netlifyEnv?.get?.(name) ?? process.env[name];
+  if (typeof raw !== 'string') {
+    return undefined;
+  }
+  const trimmed = raw.trim().replace(/^["']|["']$/g, '').trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function readFirstEnv(names: readonly string[]): string | undefined {
+  for (const name of names) {
+    const val = readEnv(name);
+    if (val) {
+      return val;
+    }
+  }
+  return undefined;
+}
+
+const SUPABASE_URL_KEYS = [
+  'SUPABASE_URL',
+  'VITE_SUPABASE_URL',
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'REACT_APP_SUPABASE_URL',
+] as const;
+
+const SUPABASE_SERVICE_KEY_NAMES = [
+  'SUPABASE_SERVICE_ROLE_KEY',
+  'SUPABASE_SERVICE_KEY',
+  'SUPABASE_SECRET_KEY',
+  'SUPABASE_ROLE_KEY',
+  'VITE_SUPABASE_SERVICE_ROLE_KEY',
+] as const;
+
+const SUPABASE_ANON_KEY_NAMES = [
+  'SUPABASE_ANON_KEY',
+  'VITE_SUPABASE_ANON_KEY',
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  'SUPABASE_PUBLISHABLE_KEY',
+] as const;
+
+function getSupabaseConfigDiagnostic(): {
+  hasUrl: boolean;
+  hasServiceKey: boolean;
+  hasAnonOnly: boolean;
+  missingVars: string[];
+  message: string;
+} {
+  const hasUrl = Boolean(readFirstEnv(SUPABASE_URL_KEYS));
+  const hasServiceKey = Boolean(readFirstEnv(SUPABASE_SERVICE_KEY_NAMES));
+  const hasAnonOnly = !hasServiceKey && Boolean(readFirstEnv(SUPABASE_ANON_KEY_NAMES));
+  const missingVars: string[] = [];
+
+  if (!hasUrl) {
+    missingVars.push('SUPABASE_URL');
+  }
+  if (!hasServiceKey) {
+    missingVars.push('SUPABASE_SERVICE_ROLE_KEY');
+  }
+
+  let message =
+    'La conexión con Supabase aún está pendiente de configuración. No se ha guardado ningún registro.';
+
+  if (hasUrl && hasAnonOnly) {
+    message =
+      'Falta SUPABASE_SERVICE_ROLE_KEY en Netlify (la clave pública anon no puede registrar usuarios; añade la clave service_role/secret con permiso en Functions y redespliega).';
+  } else if (missingVars.length > 0) {
+    message = `Faltan en Netlify (${missingVars.join(' y ')}). Asegúrate de activar el alcance "Functions" en Environment variables y redesplegar.`;
+  }
+
+  return { hasUrl, hasServiceKey, hasAnonOnly, missingVars, message };
+}
+
 function getSupabaseAdmin(): SupabaseClient | null {
-  const url = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL)?.trim();
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const url = readFirstEnv(SUPABASE_URL_KEYS);
+  const serviceKey = readFirstEnv(SUPABASE_SERVICE_KEY_NAMES);
   if (!url || !serviceKey) {
     return null;
   }
@@ -168,8 +244,8 @@ function formatDateParts(isoString: string | null): { date: string; time: string
 
 function getAllowedAdminEmails(): string[] {
   const configured = (
-    process.env.ADMIN_ALLOWED_EMAILS ||
-    process.env.ADMIN_GOOGLE_EMAIL ||
+    readEnv('ADMIN_ALLOWED_EMAILS') ||
+    readEnv('ADMIN_GOOGLE_EMAIL') ||
     'mcdgroup.dev@gmail.com'
   )
     .split(',')
@@ -673,7 +749,12 @@ export async function handleApiRequest(ctx: ApiRequestContext): Promise<ApiRespo
   if (method === 'GET' && route === '/api/waitlist/count') {
     const supabase = getSupabaseAdmin();
     if (!supabase) {
-      return { status: 200, headers: NO_STORE_HEADERS, body: { configured: false, count: null } };
+      const diag = getSupabaseConfigDiagnostic();
+      return {
+        status: 200,
+        headers: NO_STORE_HEADERS,
+        body: { configured: false, count: null, missingVars: diag.missingVars },
+      };
     }
 
     try {
@@ -722,14 +803,15 @@ export async function handleApiRequest(ctx: ApiRequestContext): Promise<ApiRespo
 
     const supabase = getSupabaseAdmin();
     if (!supabase) {
+      const diag = getSupabaseConfigDiagnostic();
       return {
         status: 503,
         headers: NO_STORE_HEADERS,
         body: {
           ok: false,
           configured: false,
-          message:
-            'La conexión con Supabase aún está pendiente de configuración. No se ha guardado ningún registro.',
+          missingVars: diag.missingVars,
+          message: diag.message,
         },
       };
     }
@@ -876,7 +958,7 @@ export async function handleApiRequest(ctx: ApiRequestContext): Promise<ApiRespo
 
   if (method === 'GET' && route === '/api/waitlist/unsubscribe') {
     const supabase = getSupabaseAdmin();
-    const secret = process.env.UNSUBSCRIBE_SECRET?.trim();
+    const secret = readEnv('UNSUBSCRIBE_SECRET');
     const token = ctx.searchParams.get('token') ?? '';
 
     if (!supabase || !secret) {
@@ -929,7 +1011,7 @@ export async function handleApiRequest(ctx: ApiRequestContext): Promise<ApiRespo
   }
 
   if (method === 'POST' && route === '/api/admin/launch-notify') {
-    const adminSecret = process.env.ADMIN_LAUNCH_SECRET?.trim();
+    const adminSecret = readEnv('ADMIN_LAUNCH_SECRET');
     const authHeader = ctx.authorizationHeader ?? '';
     const providedSecret = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
 
@@ -938,10 +1020,10 @@ export async function handleApiRequest(ctx: ApiRequestContext): Promise<ApiRespo
     }
 
     const supabase = getSupabaseAdmin();
-    const resendApiKey = process.env.RESEND_API_KEY?.trim();
-    const resendFrom = process.env.RESEND_FROM_EMAIL?.trim();
-    const unsubscribeSecret = process.env.UNSUBSCRIBE_SECRET?.trim();
-    const appUrl = (process.env.APP_URL?.trim() || ctx.origin || 'http://localhost:3000').replace(
+    const resendApiKey = readEnv('RESEND_API_KEY');
+    const resendFrom = readEnv('RESEND_FROM_EMAIL');
+    const unsubscribeSecret = readEnv('UNSUBSCRIBE_SECRET');
+    const appUrl = (readEnv('APP_URL') || ctx.origin || 'http://localhost:3000').replace(
       /\/$/,
       '',
     );

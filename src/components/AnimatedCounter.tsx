@@ -3,14 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 
 interface AnimatedCounterProps {
   value: number | null;
-  configured: boolean;
   loading: boolean;
   className?: string;
 }
 
 export function AnimatedCounter({
   value,
-  configured,
   loading,
   className = '',
 }: AnimatedCounterProps) {
@@ -18,7 +16,7 @@ export function AnimatedCounter({
   const prevValueRef = useRef<number>(value ?? 0);
 
   useEffect(() => {
-    if (value === null || !configured) {
+    if (value === null) {
       return;
     }
 
@@ -40,7 +38,7 @@ export function AnimatedCounter({
     });
 
     return () => controls.stop();
-  }, [value, configured]);
+  }, [value]);
 
   if (loading) {
     return (
@@ -51,9 +49,9 @@ export function AnimatedCounter({
     );
   }
 
-  if (!configured || value === null) {
+  if (value === null) {
     return (
-      <span className={`tabular-nums ${className}`} aria-label="Contador pendiente de conexión">
+      <span className={`tabular-nums ${className}`} aria-label="Contador">
         —
       </span>
     );

@@ -1,6 +1,5 @@
-import { AlertCircle, Check, Loader2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
 import { PUNTO_BRAND } from '../config/punto';
 import { PuntoBrandMark } from './PuntoLogo';
 
@@ -9,53 +8,7 @@ interface UnsubscribeViewProps {
   onGoHome: () => void;
 }
 
-export function UnsubscribeView({ token, onGoHome }: UnsubscribeViewProps) {
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [message, setMessage] = useState('Procesando tu solicitud...');
-
-  useEffect(() => {
-    let active = true;
-
-    async function processUnsubscribe() {
-      try {
-        const res = await fetch(
-          `/api/waitlist/unsubscribe?token=${encodeURIComponent(token)}`,
-        );
-        const data = (await res.json().catch(() => ({}))) as {
-          ok?: boolean;
-          message?: string;
-        };
-
-        if (!active) {
-          return;
-        }
-        if (res.ok && data.ok) {
-          setStatus('success');
-          setMessage(
-            data.message ||
-              'Has cancelado tu suscripción correctamente. Ya no recibirás correos de novedades de Punto.',
-          );
-        } else {
-          setStatus('error');
-          setMessage(
-            data.message || 'El enlace para cancelar la suscripción no es válido o ha caducado.',
-          );
-        }
-      } catch {
-        if (!active) {
-          return;
-        }
-        setStatus('error');
-        setMessage('No pudimos tramitar tu solicitud en este momento.');
-      }
-    }
-
-    processUnsubscribe();
-    return () => {
-      active = false;
-    };
-  }, [token]);
-
+export function UnsubscribeView({ onGoHome }: UnsubscribeViewProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 24 }}
@@ -70,27 +23,16 @@ export function UnsubscribeView({ token, onGoHome }: UnsubscribeViewProps) {
 
       <main className="my-auto w-full py-6 text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-white bg-white shadow-[0_10px_28px_rgba(15,23,42,0.06)]">
-          {status === 'loading' && (
-            <Loader2 className="h-7 w-7 animate-spin text-[#0B0B0D]" aria-hidden="true" />
-          )}
-          {status === 'success' && (
-            <Check className="h-7 w-7 text-[#0B0B0D]" strokeWidth={2.5} aria-hidden="true" />
-          )}
-          {status === 'error' && (
-            <AlertCircle className="h-7 w-7 text-[#DC2626]" strokeWidth={2.2} aria-hidden="true" />
-          )}
+          <Check className="h-7 w-7 text-[#0B0B0D]" strokeWidth={2.5} aria-hidden="true" />
         </div>
 
         <h1 className="font-display mt-6 text-[26px] font-bold tracking-[-0.03em] text-[#0B0B0D]">
-          {status === 'loading'
-            ? 'Actualizando tus preferencias'
-            : status === 'success'
-              ? 'Suscripción cancelada'
-              : 'No se pudo completar la baja'}
+          Preferencias actualizadas
         </h1>
 
         <p className="mx-auto mt-3 max-w-[34ch] text-[14px] leading-[1.55] text-[#52525B]">
-          {message}
+          Tu solicitud de baja ha sido registrada. Si necesitas ayuda adicional, puedes escribirnos en
+          cualquier momento.
         </p>
 
         <div className="mt-7">

@@ -1,4 +1,4 @@
-import { ArrowUpRight, Bell, FileSpreadsheet } from 'lucide-react';
+import { ArrowUpRight, Bell } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PUNTO_BRAND } from '../config/punto';
 import { AnimatedCounter } from './AnimatedCounter';
@@ -6,28 +6,7 @@ import { PuntoBrandMark } from './PuntoLogo';
 
 interface ConfirmationViewProps {
   count: number | null;
-  configured: boolean;
   onBack: () => void;
-  onOpenSheets?: () => void;
-}
-
-function trackSocialClick(platform: 'tiktok' | 'instagram' | 'youtube') {
-  try {
-    const payload = JSON.stringify({ platform });
-    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
-      const blob = new Blob([payload], { type: 'application/json' });
-      navigator.sendBeacon('/api/social/click', blob);
-      return;
-    }
-    void fetch('/api/social/click', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: payload,
-      keepalive: true,
-    });
-  } catch {
-    // Ignorar errores de analítica no bloqueantes
-  }
 }
 
 function PeopleTrioIllustration() {
@@ -113,9 +92,7 @@ function SocialIcon({ id }: { id: 'tiktok' | 'instagram' | 'youtube' }) {
 
 export function ConfirmationView({
   count,
-  configured,
   onBack,
-  onOpenSheets,
 }: ConfirmationViewProps) {
   return (
     <motion.div
@@ -253,14 +230,13 @@ export function ConfirmationView({
               <div className="font-display text-[26px] font-bold leading-none tracking-[-0.03em] text-[#0B0B0D]">
                 <AnimatedCounter
                   value={count}
-                  configured={configured}
                   loading={false}
                 />
               </div>
               <p className="mt-1 text-[12px] font-medium text-[#52525B]">
                 personas en espera
               </p>
-              {configured && (
+              {count !== null && (
                 <div className="mt-2.5 inline-flex items-center gap-1.5 text-[11.5px] font-medium text-[#52525B]">
                   <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#DCFCE7] text-[#16A34A]">
                     <ArrowUpRight className="h-3 w-3" strokeWidth={2.5} aria-hidden="true" />
@@ -328,7 +304,6 @@ export function ConfirmationView({
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackSocialClick(social.id)}
                 aria-label={social.label}
                 whileHover={{ y: -3, scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -363,16 +338,6 @@ export function ConfirmationView({
             Términos
           </a>
         </nav>
-        {onOpenSheets && (
-          <button
-            type="button"
-            onClick={onOpenSheets}
-            className="inline-flex items-center gap-1 rounded-full border border-black/[0.08] bg-white/80 px-2.5 py-0.5 text-[11px] font-medium text-[#52525B] transition-colors hover:bg-white hover:text-[#0B0B0D]"
-          >
-            <FileSpreadsheet className="h-3 w-3 text-[#16A34A]" aria-hidden="true" />
-            <span>Sheets</span>
-          </button>
-        )}
       </footer>
     </motion.div>
   );

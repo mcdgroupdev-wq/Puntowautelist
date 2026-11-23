@@ -4,11 +4,11 @@ import { AmbientBackdrop } from './components/AmbientBackdrop';
 import { ConfirmationView } from './components/ConfirmationView';
 import { IntroSequence } from './components/IntroSequence';
 import { ScreenShell } from './components/ScreenShell';
-import { SheetsSyncView } from './components/SheetsSyncView';
 import { UnsubscribeView } from './components/UnsubscribeView';
 import { WaitlistView } from './components/WaitlistView';
+import { supabase } from './lib/supabase';
 
-type AppScreen = 'intro' | 'waitlist' | 'confirmation' | 'unsubscribe' | 'sheets';
+type AppScreen = 'intro' | 'waitlist' | 'confirmation' | 'unsubscribe';
 
 function getUnsubscribeTokenFromUrl(): string | null {
   if (typeof window === 'undefined') {
@@ -23,12 +23,6 @@ function getInitialScreen(): AppScreen {
   if (getUnsubscribeTokenFromUrl()) {
     return 'unsubscribe';
   }
-  if (typeof window !== 'undefined') {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('panel') === 'sheets') {
-      return 'sheets';
-    }
-  }
   return 'intro';
 }
 
@@ -39,20 +33,27 @@ export default function App() {
   const [screen, setScreen] = useState<AppScreen>(() => getInitialScreen());
 
   const [count, setCount] = useState<number | null>(null);
-  const [configured, setConfigured] = useState<boolean>(false);
   const [loadingCount, setLoadingCount] = useState<boolean>(true);
 
   const loadWaitlistCount = useCallback(async () => {
+    if (!supabase) {
+      setCount(null);
+      setLoadingCount(false);
+      return;
+    }
+
     try {
-      const res = await fetch('/api/waitlist/count', { cache: 'no-store' });
-      const data = (await res.json().catch(() => ({}))) as {
-        configured?: boolean;
-        count?: number | null;
-      };
-      setConfigured(Boolean(data.configured));
-      setCount(typeof data.count === 'number' ? data.count : null);
-    } catch {
-      setConfigured(false);
+      const { data, error } = await supabase.rpc('get_waitlist_count');
+      if (error) {
+        console.error(error);
+        setCount(null);
+        return;
+      }
+
+      const parsed = typeof data === 'number' ? data : Number(data);
+      setCount(Number.isFinite(parsed) ? parsed : null);
+    } catch (err) {
+      console.error(err);
       setCount(null);
     } finally {
       setLoadingCount(false);
@@ -78,49 +79,27 @@ export default function App() {
     setScreen((prev) => (prev === 'intro' ? 'waitlist' : prev));
   }, []);
 
-  const handleRegistrationSuccess = useCallback(
-    (updatedCount: number | null) => {
-      if (typeof updatedCount === 'number') {
-        setCount(updatedCount);
-        setConfigured(true);
-      } else {
-        loadWaitlistCount();
-      }
-      setScreen('confirmation');
-    },
-    [loadWaitlistCount],
-  );
+  const handleRegistrationSuccess = useCallback(async () => {
+    await loadWaitlistCount();
+    setScreen('confirmation');
+  }, [loadWaitlistCount]);
 
   const handleBackToWaitlist = useCallback(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && unsubscribeToken) {
       const url = new URL(window.location.href);
-      let changed = false;
-      if (unsubscribeToken) {
-        url.searchParams.delete('unsubscribe');
-        setUnsubscribeToken(null);
-        changed = true;
-      }
-      if (url.searchParams.has('panel')) {
-        url.searchParams.delete('panel');
-        changed = true;
-      }
-      if (changed) {
-        window.history.replaceState({}, '', url.pathname + url.search);
-      }
+      url.searchParams.delete('unsubscribe');
+      setUnsubscribeToken(null);
+      window.history.replaceState({}, '', url.pathname + url.search);
     }
     loadWaitlistCount();
     setScreen('waitlist');
   }, [unsubscribeToken, loadWaitlistCount]);
 
-  const handleOpenSheets = useCallback(() => {
-    setScreen('sheets');
-  }, []);
-
   return (
     <div className="relative min-h-dvh overflow-x-hidden bg-[#E9ECF2] text-[#0B0B0D]">
       <AmbientBackdrop />
 
-      <ScreenShell wide={screen === 'sheets'}>
+      <ScreenShell>
         <AnimatePresence mode="wait">
           {screen === 'intro' && (
             <IntroSequence key="intro" onComplete={handleIntroComplete} />
@@ -130,10 +109,8 @@ export default function App() {
             <WaitlistView
               key="waitlist"
               count={count}
-              configured={configured}
               loadingCount={loadingCount}
               onSuccess={handleRegistrationSuccess}
-              onOpenSheets={handleOpenSheets}
             />
           )}
 
@@ -141,14 +118,8 @@ export default function App() {
             <ConfirmationView
               key="confirmation"
               count={count}
-              configured={configured}
               onBack={handleBackToWaitlist}
-              onOpenSheets={handleOpenSheets}
             />
-          )}
-
-          {screen === 'sheets' && (
-            <SheetsSyncView key="sheets" onBack={handleBackToWaitlist} />
           )}
 
           {screen === 'unsubscribe' && unsubscribeToken && (

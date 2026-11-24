@@ -54,14 +54,6 @@ const ROUTES = [
   },
 ];
 
-const SITEMAP_PATHS = [
-  '/',
-  '/privacidad',
-  '/terminos',
-  '/seguridad-infantil',
-  '/eliminar-cuenta',
-];
-
 function escapeHtmlAttr(value) {
   return value
     .replace(/&/g, '&amp;')
@@ -77,43 +69,6 @@ function escapeHtmlText(value) {
 function normalizeSsrMotionStyles(html) {
   // Motion SSR emits inline initial styles (like opacity:0) that stay invisible if JS is disabled.
   return html.replace(/opacity:\s*0(?=[;"])/g, 'opacity:1');
-}
-
-function writeSitemapAndRobots() {
-  const lastmod = new Date().toISOString().split('T')[0];
-
-  const urlEntries = SITEMAP_PATHS.map((routePath) => {
-    const loc = `${SITE_URL}${routePath}`;
-    const priority = routePath === '/' ? '1.0' : '0.8';
-    const changefreq = routePath === '/' ? 'weekly' : 'monthly';
-    return [
-      '  <url>',
-      `    <loc>${loc}</loc>`,
-      `    <lastmod>${lastmod}</lastmod>`,
-      `    <changefreq>${changefreq}</changefreq>`,
-      `    <priority>${priority}</priority>`,
-      '  </url>',
-    ].join('\n');
-  }).join('\n');
-
-  const sitemapXml = [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    urlEntries,
-    '</urlset>',
-    '',
-  ].join('\n');
-
-  const robotsTxt = [
-    'User-agent: *',
-    'Allow: /',
-    '',
-    `Sitemap: ${SITE_URL}/sitemap.xml`,
-    '',
-  ].join('\n');
-
-  fs.writeFileSync(path.join(distDir, 'sitemap.xml'), sitemapXml, 'utf8');
-  fs.writeFileSync(path.join(distDir, 'robots.txt'), robotsTxt, 'utf8');
 }
 
 async function run() {
@@ -174,11 +129,9 @@ async function run() {
     fs.writeFileSync(item.outFile, pageHtml, 'utf8');
   }
 
-  writeSitemapAndRobots();
-
   fs.rmSync(prerenderDir, { recursive: true, force: true });
   console.log(
-    'Pre-rendered static HTML, sitemap.xml, and robots.txt for:',
+    'Pre-rendered static HTML for:',
     ROUTES.map((r) => r.route).join(', '),
   );
 }

@@ -16,6 +16,7 @@ import { isValidEmail, normalizeEmail, PUNTO_BRAND } from '../config/punto';
 import { supabase } from '../lib/supabase';
 import { AnimatedCounter } from './AnimatedCounter';
 import { PuntoBrandMark } from './PuntoLogo';
+import { FooterSocialLinks } from './SocialLinks';
 
 interface WaitlistViewProps {
   count: number | null;
@@ -391,13 +392,15 @@ export function WaitlistView({
         </section>
       </main>
 
-      <footer className="flex w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 pt-2">
-        <p className="text-[11.5px] font-medium text-[#71717A]">
-          {PUNTO_BRAND.name} <span aria-hidden="true">·</span> {PUNTO_BRAND.developer}
-        </p>
-        <span aria-hidden="true" className="text-[11.5px] text-[#71717A]">
-          ·
-        </span>
+      <footer className="flex w-full flex-col items-center gap-2.5 pt-4">
+        <FooterSocialLinks />
+        <div className="flex w-full flex-wrap items-center justify-center gap-x-2 gap-y-1">
+          <p className="text-[11.5px] font-medium text-[#71717A]">
+            {PUNTO_BRAND.name} <span aria-hidden="true">·</span> {PUNTO_BRAND.developer}
+          </p>
+          <span aria-hidden="true" className="text-[11.5px] text-[#71717A]">
+            ·
+          </span>
         <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#71717A]">
           <a
             href="/privacidad"
@@ -464,6 +467,7 @@ export function WaitlistView({
             Aviso legal
           </a>
         </nav>
+        </div>
       </footer>
     </motion.div>
   );

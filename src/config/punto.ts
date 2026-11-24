@@ -15,12 +15,12 @@ export const PUNTO_BRAND = {
     {
       id: 'instagram',
       label: 'Instagram de Punto',
-      href: 'https://www.instagram.com/punto.connect?dlrf=MXFsdXc3ZnQ4dDloaA==',
+      href: 'https://www.instagram.com/punto.connect',
     },
     {
       id: 'youtube',
       label: 'YouTube de Punto',
-      href: 'https://youtube.com/@punto.connect?si=ISIRB4yp44nH7zW6',
+      href: 'https://youtube.com/@punto.connect',
     },
   ],
 } as const;

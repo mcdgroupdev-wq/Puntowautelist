@@ -4,6 +4,7 @@ import type { MouseEvent, ReactNode } from 'react';
 import { PUNTO_BRAND } from '../config/punto';
 import { AmbientBackdrop } from './AmbientBackdrop';
 import { PuntoBrandMark } from './PuntoLogo';
+import { FooterSocialLinks } from './SocialLinks';
 
 interface LegalLayoutProps {
   children: ReactNode;
@@ -69,9 +70,12 @@ export function LegalLayout({ children, onNavigate, activePath }: LegalLayoutPro
 
           {/* Pie de página legal */}
           <footer className="flex flex-col items-center justify-between gap-3 border-t border-black/[0.06] bg-[#FAFAFB]/80 px-5 py-5 text-center sm:flex-row sm:px-10 sm:text-left">
-            <p className="text-[12px] font-medium text-[#71717A]">
-              {PUNTO_BRAND.name} <span aria-hidden="true">·</span> {PUNTO_BRAND.developer}
-            </p>
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-3">
+              <p className="text-[12px] font-medium text-[#71717A]">
+                {PUNTO_BRAND.name} <span aria-hidden="true">·</span> {PUNTO_BRAND.developer}
+              </p>
+              <FooterSocialLinks />
+            </div>
             <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-3 text-[12px] font-medium">
               <a
                 href="/privacidad"

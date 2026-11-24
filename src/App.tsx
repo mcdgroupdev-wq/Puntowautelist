@@ -67,7 +67,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    let title = 'Punto – App para encontrar cofundador y socios para tu startup';
+    let title = 'Punto – Encuentra a tu cofundador | App para emprendedores';
     let description =
       'Punto conecta emprendedores para encontrar cofundador, socio técnico o equipo. Únete a la lista de espera.';
 

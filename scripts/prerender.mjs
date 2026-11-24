@@ -13,7 +13,7 @@ const ROUTES = [
   {
     route: '/',
     outFile: path.join(distDir, 'index.html'),
-    title: 'Punto – App para encontrar cofundador y socios para tu startup',
+    title: 'Punto – Encuentra a tu cofundador | App para emprendedores',
     description:
       'Punto conecta emprendedores para encontrar cofundador, socio técnico o equipo. Únete a la lista de espera.',
   },

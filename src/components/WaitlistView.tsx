@@ -7,6 +7,7 @@ import {
   Heart,
   Loader2,
   Mail,
+  Smartphone,
   Users,
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -125,15 +126,15 @@ export function WaitlistView({
           className="text-center"
         >
           <h1
-            className="font-display text-[32px] leading-[1.07] font-bold tracking-[-0.035em] text-[#0B0B0D] sm:text-[34px]"
+            className="font-display text-[30px] leading-[1.08] font-bold tracking-[-0.035em] text-[#0B0B0D] sm:text-[33px]"
             style={{ textWrap: 'balance' }}
           >
-            Sé de los primeros
-            <span className="block text-[#6E727D]">en llegar.</span>
+            Punto: encuentra a tu cofundador
           </h1>
 
-          <p className="mx-auto mt-3 max-w-[34ch] text-[14px] leading-[1.55] text-[#52525B]">
-            Estamos preparando una nueva forma de conectar con personas que comparten tu visión.
+          <p className="mx-auto mt-3 max-w-[38ch] text-[14px] leading-[1.55] text-[#52525B]">
+            Punto es la app que conecta a emprendedores para encontrar cofundador, socio técnico o
+            equipo con el que lanzar una startup juntos.
           </p>
         </motion.div>
 
@@ -360,6 +361,34 @@ export function WaitlistView({
             <span>Te avisaremos cuando Punto esté listo</span>
           </p>
         </motion.form>
+
+        {/* Breve explicación estática y enlace a Google Play */}
+        <section
+          aria-label="Sobre Punto"
+          className="mt-6 space-y-2.5 border-t border-black/[0.06] pt-5 text-center text-[12.5px] leading-[1.58] text-[#52525B]"
+        >
+          <p>
+            Pensada para fundadores con una idea que buscan socio técnico, desarrolladores o
+            diseñadores que quieren sumarse a un proyecto desde el inicio, y perfiles de negocio en
+            busca de equipo.
+          </p>
+          <p>
+            Crea tu perfil con tus habilidades e intereses, descubre personas compatibles, haz match
+            y empezad a hablar directamente para construir vuestra startup.
+          </p>
+          <div className="pt-1.5">
+            <a
+              href={PUNTO_BRAND.googlePlayUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white/90 px-4 py-2 text-[12.5px] font-semibold text-[#0B0B0D] shadow-[0_4px_12px_rgba(15,23,42,0.04)] transition-colors hover:bg-white"
+            >
+              <Smartphone className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+              <span>Ver Punto en Google Play</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-[#71717A]" strokeWidth={2.2} aria-hidden="true" />
+            </a>
+          </div>
+        </section>
       </main>
 
       <footer className="flex w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 pt-2">

@@ -67,9 +67,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    let title = 'Punto – Encuentra a tu cofundador';
+    let title = 'Punto – App para encontrar cofundador y socios para tu startup';
     let description =
-      'Punto es una app para emprendedores que quieren encontrar cofundadores, socios y colaboradores para crear proyectos juntos. Únete a la lista de espera.';
+      'Punto conecta emprendedores para encontrar cofundador, socio técnico o equipo. Únete a la lista de espera.';
 
     if (pathname === '/privacidad') {
       title = 'Política de privacidad – Punto';
@@ -96,9 +96,26 @@ export default function App() {
     }
 
     document.title = title;
+    const canonicalUrl = `https://usepunto.com${pathname === '/' ? '/' : pathname}`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute('content', description);
+    }
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', title);
+    }
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) {
+      ogDesc.setAttribute('content', description);
+    }
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', canonicalUrl);
+    }
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', canonicalUrl);
     }
   }, [pathname]);
 

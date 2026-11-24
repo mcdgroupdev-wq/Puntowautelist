@@ -7,13 +7,15 @@ const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
 const prerenderDir = path.join(rootDir, '.prerender');
 
+const SITE_URL = 'https://usepunto.com';
+
 const ROUTES = [
   {
     route: '/',
     outFile: path.join(distDir, 'index.html'),
-    title: 'Punto – Encuentra a tu cofundador',
+    title: 'Punto – App para encontrar cofundador y socios para tu startup',
     description:
-      'Punto es una app para emprendedores que quieren encontrar cofundadores, socios y colaboradores para crear proyectos juntos. Únete a la lista de espera.',
+      'Punto conecta emprendedores para encontrar cofundador, socio técnico o equipo. Únete a la lista de espera.',
   },
   {
     route: '/privacidad',
@@ -52,6 +54,14 @@ const ROUTES = [
   },
 ];
 
+const SITEMAP_PATHS = [
+  '/',
+  '/privacidad',
+  '/terminos',
+  '/seguridad-infantil',
+  '/eliminar-cuenta',
+];
+
 function escapeHtmlAttr(value) {
   return value
     .replace(/&/g, '&amp;')
@@ -67,6 +77,43 @@ function escapeHtmlText(value) {
 function normalizeSsrMotionStyles(html) {
   // Motion SSR emits inline initial styles (like opacity:0) that stay invisible if JS is disabled.
   return html.replace(/opacity:\s*0(?=[;"])/g, 'opacity:1');
+}
+
+function writeSitemapAndRobots() {
+  const lastmod = new Date().toISOString().split('T')[0];
+
+  const urlEntries = SITEMAP_PATHS.map((routePath) => {
+    const loc = `${SITE_URL}${routePath}`;
+    const priority = routePath === '/' ? '1.0' : '0.8';
+    const changefreq = routePath === '/' ? 'weekly' : 'monthly';
+    return [
+      '  <url>',
+      `    <loc>${loc}</loc>`,
+      `    <lastmod>${lastmod}</lastmod>`,
+      `    <changefreq>${changefreq}</changefreq>`,
+      `    <priority>${priority}</priority>`,
+      '  </url>',
+    ].join('\n');
+  }).join('\n');
+
+  const sitemapXml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    urlEntries,
+    '</urlset>',
+    '',
+  ].join('\n');
+
+  const robotsTxt = [
+    'User-agent: *',
+    'Allow: /',
+    '',
+    `Sitemap: ${SITE_URL}/sitemap.xml`,
+    '',
+  ].join('\n');
+
+  fs.writeFileSync(path.join(distDir, 'sitemap.xml'), sitemapXml, 'utf8');
+  fs.writeFileSync(path.join(distDir, 'robots.txt'), robotsTxt, 'utf8');
 }
 
 async function run() {
@@ -87,7 +134,9 @@ async function run() {
     const rawMarkup = renderRoute(item.route);
     const visibleMarkup = normalizeSsrMotionStyles(rawMarkup);
     const safeTitle = escapeHtmlText(item.title);
+    const safeTitleAttr = escapeHtmlAttr(item.title);
     const safeDesc = escapeHtmlAttr(item.description);
+    const canonicalUrl = `${SITE_URL}${item.route}`;
 
     let pageHtml = templateHtml
       .replace(/<title>[\s\S]*?<\/title>/, `<title>${safeTitle}</title>`)
@@ -96,12 +145,28 @@ async function run() {
         `<meta name="description" content="${safeDesc}" />`,
       )
       .replace(
+        /<link\s+rel="canonical"\s+href="[^"]*"\s*\/?>/,
+        `<link rel="canonical" href="${canonicalUrl}" />`,
+      )
+      .replace(
+        /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/,
+        `<meta property="og:url" content="${canonicalUrl}" />`,
+      )
+      .replace(
         /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/,
-        `<meta property="og:title" content="${escapeHtmlAttr(item.title)}" />`,
+        `<meta property="og:title" content="${safeTitleAttr}" />`,
       )
       .replace(
         /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/,
         `<meta property="og:description" content="${safeDesc}" />`,
+      )
+      .replace(
+        /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/,
+        `<meta name="twitter:title" content="${safeTitleAttr}" />`,
+      )
+      .replace(
+        /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/,
+        `<meta name="twitter:description" content="${safeDesc}" />`,
       )
       .replace('<div id="root"></div>', `<div id="root">${visibleMarkup}</div>`);
 
@@ -109,8 +174,13 @@ async function run() {
     fs.writeFileSync(item.outFile, pageHtml, 'utf8');
   }
 
+  writeSitemapAndRobots();
+
   fs.rmSync(prerenderDir, { recursive: true, force: true });
-  console.log('Pre-rendered static HTML for:', ROUTES.map((r) => r.route).join(', '));
+  console.log(
+    'Pre-rendered static HTML, sitemap.xml, and robots.txt for:',
+    ROUTES.map((r) => r.route).join(', '),
+  );
 }
 
 run().catch((err) => {

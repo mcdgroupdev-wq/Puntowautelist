@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { AmbientBackdrop } from './components/AmbientBackdrop';
 import { ChildSafetyPage } from './components/ChildSafetyPage';
 import { ConfirmationView } from './components/ConfirmationView';
+import { DeleteAccountPage } from './components/DeleteAccountPage';
 import { IntroSequence } from './components/IntroSequence';
 import { LegalNoticePage } from './components/LegalNoticePage';
 import { NotFoundPage } from './components/NotFoundPage';
@@ -86,6 +87,10 @@ export default function App() {
       title = 'Estándares de seguridad infantil – Punto';
       description =
         'Estándares de seguridad infantil de PUNTO (MCD Group): directrices sobre conductas prohibidas y protocolos de denuncia CSAE/CSAM.';
+    } else if (pathname === '/eliminar-cuenta') {
+      title = 'Eliminar tu cuenta de Punto';
+      description =
+        'Cómo solicitar la eliminación de tu cuenta y datos personales en la app Punto (MCD Group): desde la app o por correo electrónico.';
     } else if (pathname !== '/') {
       title = 'Página no encontrada – Punto';
     }
@@ -188,6 +193,10 @@ export default function App() {
 
   if (pathname === '/seguridad-infantil') {
     return <ChildSafetyPage onNavigate={navigate} />;
+  }
+
+  if (pathname === '/eliminar-cuenta') {
+    return <DeleteAccountPage onNavigate={navigate} />;
   }
 
   if (pathname !== '/') {

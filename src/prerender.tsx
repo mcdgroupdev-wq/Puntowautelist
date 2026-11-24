@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { AmbientBackdrop } from './components/AmbientBackdrop';
 import { ChildSafetyPage } from './components/ChildSafetyPage';
+import { DeleteAccountPage } from './components/DeleteAccountPage';
 import { LegalNoticePage } from './components/LegalNoticePage';
 import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 import { ScreenShell } from './components/ScreenShell';
@@ -12,7 +13,8 @@ export type PrerenderRoute =
   | '/privacidad'
   | '/terminos'
   | '/aviso-legal'
-  | '/seguridad-infantil';
+  | '/seguridad-infantil'
+  | '/eliminar-cuenta';
 
 const noop = () => {};
 
@@ -28,6 +30,9 @@ export function renderRoute(route: PrerenderRoute): string {
   }
   if (route === '/seguridad-infantil') {
     return renderToStaticMarkup(<ChildSafetyPage onNavigate={noop} />);
+  }
+  if (route === '/eliminar-cuenta') {
+    return renderToStaticMarkup(<DeleteAccountPage onNavigate={noop} />);
   }
 
   return renderToStaticMarkup(

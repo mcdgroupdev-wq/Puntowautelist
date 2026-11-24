@@ -8,7 +8,12 @@ import { PuntoBrandMark } from './PuntoLogo';
 interface LegalLayoutProps {
   children: ReactNode;
   onNavigate: (path: string) => void;
-  activePath: '/privacidad' | '/terminos' | '/aviso-legal' | '/seguridad-infantil';
+  activePath:
+    | '/privacidad'
+    | '/terminos'
+    | '/aviso-legal'
+    | '/seguridad-infantil'
+    | '/eliminar-cuenta';
 }
 
 export function LegalLayout({ children, onNavigate, activePath }: LegalLayoutProps) {
@@ -78,6 +83,20 @@ export function LegalLayout({ children, onNavigate, activePath }: LegalLayoutPro
                 }`}
               >
                 Privacidad
+              </a>
+              <span aria-hidden="true" className="text-[#D4D4D8]">
+                ·
+              </span>
+              <a
+                href="/eliminar-cuenta"
+                onClick={(e) => handleInternalLink(e, '/eliminar-cuenta')}
+                className={`transition-colors ${
+                  activePath === '/eliminar-cuenta'
+                    ? 'font-semibold text-[#0B0B0D]'
+                    : 'text-[#71717A] hover:text-[#0B0B0D]'
+                }`}
+              >
+                Eliminar cuenta
               </a>
               <span aria-hidden="true" className="text-[#D4D4D8]">
                 ·

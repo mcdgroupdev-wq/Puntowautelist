@@ -70,6 +70,19 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
           </a>
           <span aria-hidden="true">·</span>
           <a
+            href="/eliminar-cuenta"
+            onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+              if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
+                e.preventDefault();
+                onNavigate('/eliminar-cuenta');
+              }
+            }}
+            className="transition-colors hover:text-[#0B0B0D]"
+          >
+            Eliminar cuenta
+          </a>
+          <span aria-hidden="true">·</span>
+          <a
             href="/terminos"
             onClick={(e: MouseEvent<HTMLAnchorElement>) => {
               if (onNavigate && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {

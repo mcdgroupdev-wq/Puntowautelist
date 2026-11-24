@@ -43,6 +43,13 @@ const ROUTES = [
     description:
       'Estándares de seguridad infantil de PUNTO (MCD Group): directrices sobre conductas prohibidas y protocolos de denuncia CSAE/CSAM.',
   },
+  {
+    route: '/eliminar-cuenta',
+    outFile: path.join(distDir, 'eliminar-cuenta', 'index.html'),
+    title: 'Eliminar tu cuenta de Punto',
+    description:
+      'Cómo solicitar la eliminación de tu cuenta y datos personales en la app Punto (MCD Group): desde la app o por correo electrónico.',
+  },
 ];
 
 function escapeHtmlAttr(value) {

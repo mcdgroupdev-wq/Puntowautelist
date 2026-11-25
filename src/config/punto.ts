@@ -3,7 +3,6 @@ export const PUNTO_BRAND = {
   developer: 'MCD Group',
   tagline: 'Conecta. Crea. Comparte.',
   siteUrl: 'https://usepunto.com',
-  googlePlayUrl: 'https://play.google.com/store/apps/details?id=com.mcdgroup.punto',
   contactEmail: 'hola@usepunto.com',
   reportsEmail: 'mcdgroup.dev@gmail.com',
   socials: [

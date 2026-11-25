@@ -1,7 +1,6 @@
-import { Smartphone } from 'lucide-react';
 import { PUNTO_BRAND } from '../config/punto';
 
-export function SocialIcon({ id }: { id: 'tiktok' | 'instagram' | 'youtube' | 'googleplay' }) {
+export function SocialIcon({ id }: { id: 'tiktok' | 'instagram' | 'youtube' }) {
   if (id === 'tiktok') {
     return (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -28,14 +27,11 @@ export function SocialIcon({ id }: { id: 'tiktok' | 'instagram' | 'youtube' | 'g
       </svg>
     );
   }
-  if (id === 'youtube') {
-    return (
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81ZM9.6 15.62V8.38L15.88 12 9.6 15.62Z" />
-      </svg>
-    );
-  }
-  return <Smartphone className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />;
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81ZM9.6 15.62V8.38L15.88 12 9.6 15.62Z" />
+    </svg>
+  );
 }
 
 interface FooterSocialLinksProps {
@@ -43,25 +39,12 @@ interface FooterSocialLinksProps {
 }
 
 export function FooterSocialLinks({ className = '' }: FooterSocialLinksProps) {
-  const items: Array<{
-    id: 'tiktok' | 'instagram' | 'youtube' | 'googleplay';
-    label: string;
-    href: string;
-  }> = [
-    ...PUNTO_BRAND.socials,
-    {
-      id: 'googleplay',
-      label: 'Punto en Google Play',
-      href: PUNTO_BRAND.googlePlayUrl,
-    },
-  ];
-
   return (
     <div
       aria-label="Redes sociales de Punto"
       className={`flex items-center justify-center gap-2 ${className}`}
     >
-      {items.map((item) => (
+      {PUNTO_BRAND.socials.map((item) => (
         <a
           key={item.id}
           href={item.href}

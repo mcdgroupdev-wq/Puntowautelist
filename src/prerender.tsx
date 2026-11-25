@@ -7,6 +7,7 @@ import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 import { ScreenShell } from './components/ScreenShell';
 import { TermsPage } from './components/TermsPage';
 import { WaitlistView } from './components/WaitlistView';
+import { I18nProvider } from './i18n';
 
 export type PrerenderRoute =
   | '/'
@@ -36,11 +37,13 @@ export function renderRoute(route: PrerenderRoute): string {
   }
 
   return renderToStaticMarkup(
-    <div className="relative min-h-dvh overflow-x-hidden bg-[#E9ECF2] text-[#0B0B0D]">
-      <AmbientBackdrop />
-      <ScreenShell>
-        <WaitlistView count={null} loadingCount={false} onSuccess={noop} onNavigate={noop} />
-      </ScreenShell>
-    </div>,
+    <I18nProvider forcedLocale="es">
+      <div className="relative min-h-dvh overflow-x-hidden bg-[#E9ECF2] text-[#0B0B0D]">
+        <AmbientBackdrop />
+        <ScreenShell>
+          <WaitlistView count={null} loadingCount={false} onSuccess={noop} onNavigate={noop} />
+        </ScreenShell>
+      </div>
+    </I18nProvider>,
   );
 }

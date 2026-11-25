@@ -12,6 +12,7 @@ import { ScreenShell } from './components/ScreenShell';
 import { TermsPage } from './components/TermsPage';
 import { UnsubscribeView } from './components/UnsubscribeView';
 import { WaitlistView } from './components/WaitlistView';
+import { I18nProvider } from './i18n';
 import { supabase } from './lib/supabase';
 
 type AppScreen = 'intro' | 'waitlist' | 'confirmation' | 'unsubscribe';
@@ -48,6 +49,14 @@ function getInitialScreen(): AppScreen {
 }
 
 export default function App() {
+  return (
+    <I18nProvider>
+      <AppContent />
+    </I18nProvider>
+  );
+}
+
+function AppContent() {
   const [pathname, setPathname] = useState<string>(() => getCurrentPathname());
   const [unsubscribeToken, setUnsubscribeToken] = useState<string | null>(() =>
     getUnsubscribeTokenFromUrl(),

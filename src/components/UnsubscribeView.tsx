@@ -2,6 +2,8 @@ import { Check } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { MouseEvent } from 'react';
 import { PUNTO_BRAND } from '../config/punto';
+import { useI18n } from '../i18n';
+import { LanguageToggle } from './LanguageToggle';
 import { PuntoBrandMark } from './PuntoLogo';
 
 interface UnsubscribeViewProps {
@@ -11,6 +13,8 @@ interface UnsubscribeViewProps {
 }
 
 export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) {
+  const { t } = useI18n();
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 24 }}
@@ -19,8 +23,12 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       className="flex flex-1 flex-col justify-between"
     >
-      <header className="flex w-full items-center justify-center pt-1">
+      <header className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2 pt-1">
+        <div aria-hidden="true" />
         <PuntoBrandMark symbolSize={36} />
+        <div className="justify-self-end">
+          <LanguageToggle />
+        </div>
       </header>
 
       <main className="my-auto w-full py-6 text-center">
@@ -29,12 +37,11 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
         </div>
 
         <h1 className="font-display mt-6 text-[26px] font-bold tracking-[-0.03em] text-[#0B0B0D]">
-          Preferencias actualizadas
+          {t.unsubscribe.title}
         </h1>
 
         <p className="mx-auto mt-3 max-w-[34ch] text-[14px] leading-[1.55] text-[#52525B]">
-          Tu solicitud de baja ha sido registrada. Si necesitas ayuda adicional, puedes escribirnos en
-          cualquier momento.
+          {t.unsubscribe.subtitle}
         </p>
 
         <div className="mt-7">
@@ -43,7 +50,7 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
             onClick={onGoHome}
             className="inline-flex h-[50px] w-full items-center justify-center rounded-full bg-[#0A0A0C] px-8 text-[15px] font-semibold text-white transition-all hover:bg-[#1C1C20] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0B0B0D]/20 whitespace-nowrap"
           >
-            Volver al inicio
+            {t.unsubscribe.backButton}
           </button>
         </div>
       </main>
@@ -55,7 +62,7 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
         <span aria-hidden="true" className="text-[11.5px] text-[#71717A]">
           ·
         </span>
-        <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#71717A]">
+        <nav aria-label={t.footer.legalAria} className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#71717A]">
           <a
             href="/privacidad"
             onClick={(e: MouseEvent<HTMLAnchorElement>) => {
@@ -66,7 +73,7 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Privacidad
+            {t.footer.privacy}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -79,7 +86,7 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Eliminar cuenta
+            {t.footer.deleteAccount}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -92,7 +99,7 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Términos
+            {t.footer.terms}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -105,7 +112,7 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Seguridad infantil
+            {t.footer.childSafety}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -118,7 +125,7 @@ export function UnsubscribeView({ onGoHome, onNavigate }: UnsubscribeViewProps) 
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Aviso legal
+            {t.footer.legalNotice}
           </a>
         </nav>
       </footer>

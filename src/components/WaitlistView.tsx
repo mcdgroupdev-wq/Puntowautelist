@@ -12,8 +12,10 @@ import {
 import { motion } from 'motion/react';
 import { type FormEvent, type MouseEvent, useId, useState } from 'react';
 import { isValidEmail, normalizeEmail, PUNTO_BRAND } from '../config/punto';
+import { useI18n } from '../i18n';
 import { supabase } from '../lib/supabase';
 import { AnimatedCounter } from './AnimatedCounter';
+import { LanguageToggle } from './LanguageToggle';
 import { PuntoBrandMark } from './PuntoLogo';
 import { FooterSocialLinks } from './SocialLinks';
 
@@ -30,6 +32,9 @@ export function WaitlistView({
   onSuccess,
   onNavigate,
 }: WaitlistViewProps) {
+  type WaitlistErrorKey = 'emptyEmail' | 'invalidEmail' | 'missingConsent' | 'generic';
+
+  const { t } = useI18n();
   const emailInputId = useId();
   const feedbackMessageId = useId();
   const consentCheckboxId = useId();
@@ -37,8 +42,11 @@ export function WaitlistView({
   const [email, setEmail] = useState('');
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [duplicateNotice, setDuplicateNotice] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<WaitlistErrorKey | null>(null);
+  const [hasDuplicateNotice, setHasDuplicateNotice] = useState(false);
+
+  const errorMessage = errorKey ? t.waitlist.errors[errorKey] : null;
+  const duplicateNotice = hasDuplicateNotice ? t.waitlist.errors.duplicateEmail : null;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,31 +56,31 @@ export function WaitlistView({
 
     const normalized = normalizeEmail(email);
     if (!normalized) {
-      setDuplicateNotice(null);
-      setErrorMessage('Introduce tu correo electrónico para unirte a la lista.');
+      setHasDuplicateNotice(false);
+      setErrorKey('emptyEmail');
       return;
     }
     if (!isValidEmail(normalized)) {
-      setDuplicateNotice(null);
-      setErrorMessage('Revisa el formato de tu correo electrónico (ejemplo: nombre@correo.com).');
+      setHasDuplicateNotice(false);
+      setErrorKey('invalidEmail');
       return;
     }
 
     if (!marketingConsent) {
-      setDuplicateNotice(null);
-      setErrorMessage('Marca la casilla para continuar');
+      setHasDuplicateNotice(false);
+      setErrorKey('missingConsent');
       return;
     }
 
     if (!supabase) {
       console.error('Supabase client is not initialized: missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY.');
-      setDuplicateNotice(null);
-      setErrorMessage('No pudimos completar tu registro en este momento. Inténtalo de nuevo.');
+      setHasDuplicateNotice(false);
+      setErrorKey('generic');
       return;
     }
 
-    setErrorMessage(null);
-    setDuplicateNotice(null);
+    setErrorKey(null);
+    setHasDuplicateNotice(false);
     setSubmitting(true);
 
     try {
@@ -82,18 +90,18 @@ export function WaitlistView({
 
       if (error) {
         if (error.code === '23505') {
-          setDuplicateNotice('¡Ya estás en la lista! 🎉');
+          setHasDuplicateNotice(true);
           return;
         }
         console.error(error);
-        setErrorMessage('No pudimos completar tu registro en este momento. Inténtalo de nuevo.');
+        setErrorKey('generic');
         return;
       }
 
       await onSuccess();
     } catch (err) {
       console.error(err);
-      setErrorMessage('No pudimos completar tu registro en este momento. Inténtalo de nuevo.');
+      setErrorKey('generic');
     } finally {
       setSubmitting(false);
     }
@@ -107,14 +115,18 @@ export function WaitlistView({
       transition={{ duration: 0.44, ease: [0.16, 1, 0.3, 1] }}
       className="flex flex-1 flex-col justify-between"
     >
-      {/* Cabecera animada con logotipo interactivo */}
+      {/* Cabecera animada con logotipo interactivo y selector ES | EN */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-        className="flex w-full items-center justify-center pt-1"
+        className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2 pt-1"
       >
+        <div aria-hidden="true" />
         <PuntoBrandMark symbolSize={42} />
+        <div className="justify-self-end">
+          <LanguageToggle />
+        </div>
       </motion.header>
 
       {/* Contenido principal con entrada escalonada */}
@@ -129,12 +141,11 @@ export function WaitlistView({
             className="font-display text-[30px] leading-[1.08] font-bold tracking-[-0.035em] text-[#0B0B0D] sm:text-[33px]"
             style={{ textWrap: 'balance' }}
           >
-            Punto: encuentra a tu cofundador
+            {t.waitlist.headline}
           </h1>
 
           <p className="mx-auto mt-3 max-w-[38ch] text-[14px] leading-[1.55] text-[#52525B]">
-            Punto es la app que conecta a emprendedores para encontrar cofundador, socio técnico o
-            equipo con el que lanzar una startup juntos.
+            {t.waitlist.subtitle}
           </p>
         </motion.div>
 
@@ -160,7 +171,7 @@ export function WaitlistView({
                     />
                   </div>
                   <p className="mt-1 text-[11.5px] font-medium text-[#71717A] truncate">
-                    personas en espera
+                    {t.waitlist.counterLabel}
                   </p>
                 </div>
               </div>
@@ -189,7 +200,7 @@ export function WaitlistView({
           >
           <div>
             <label htmlFor={emailInputId} className="sr-only">
-              Tu correo electrónico
+              {t.waitlist.emailLabel}
             </label>
             <div
               className={`group flex h-[54px] items-center gap-3 rounded-full border bg-white/92 px-5 shadow-[0_6px_18px_rgba(15,23,42,0.04)] backdrop-blur-sm transition-all duration-150 ${
@@ -221,14 +232,14 @@ export function WaitlistView({
                 disabled={submitting}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  if (errorMessage) {
-                    setErrorMessage(null);
+                  if (errorKey) {
+                    setErrorKey(null);
                   }
-                  if (duplicateNotice) {
-                    setDuplicateNotice(null);
+                  if (hasDuplicateNotice) {
+                    setHasDuplicateNotice(false);
                   }
                 }}
-                placeholder="Tu correo electrónico"
+                placeholder={t.waitlist.emailPlaceholder}
                 aria-invalid={Boolean(errorMessage || duplicateNotice)}
                 aria-describedby={
                   errorMessage || duplicateNotice ? feedbackMessageId : undefined
@@ -284,11 +295,11 @@ export function WaitlistView({
             {submitting ? (
               <>
                 <Loader2 className="h-[18px] w-[18px] animate-spin" aria-hidden="true" />
-                <span>Procesando...</span>
+                <span>{t.waitlist.submittingButton}</span>
               </>
             ) : (
               <>
-                <span className="relative z-10">Unirme a la lista</span>
+                <span className="relative z-10">{t.waitlist.submitButton}</span>
                 <ArrowRight
                   className="relative z-10 h-[18px] w-[18px] transition-transform duration-150 group-hover:translate-x-1"
                   strokeWidth={2}
@@ -311,8 +322,8 @@ export function WaitlistView({
                 disabled={submitting}
                 onChange={(e) => {
                   setMarketingConsent(e.target.checked);
-                  if (errorMessage === 'Marca la casilla para continuar') {
-                    setErrorMessage(null);
+                  if (errorKey === 'missingConsent') {
+                    setErrorKey(null);
                   }
                 }}
                 className="peer sr-only"
@@ -330,7 +341,7 @@ export function WaitlistView({
               </span>
             </span>
             <span className="text-[12px] leading-[1.45] text-[#52525B]">
-              Acepto la{' '}
+              {t.waitlist.consentPrefix}{' '}
               <a
                 href="/privacidad"
                 onClick={(e: MouseEvent<HTMLAnchorElement>) => {
@@ -342,10 +353,9 @@ export function WaitlistView({
                 }}
                 className="font-semibold text-[#0B0B0D] underline decoration-black/25 underline-offset-2 transition-colors hover:decoration-[#0B0B0D]"
               >
-                Política de privacidad
+                {t.waitlist.consentLink}
               </a>{' '}
-              y recibir novedades y un correo cuando Punto esté disponible. Puedo darme de baja
-              cuando quiera.
+              {t.waitlist.consentSuffix}
             </span>
           </label>
 
@@ -358,7 +368,7 @@ export function WaitlistView({
             >
               <Heart className="h-3.5 w-3.5 fill-[#0B0B0D] text-[#0B0B0D]" aria-hidden="true" />
             </motion.span>
-            <span>Te avisaremos cuando Punto esté listo</span>
+            <span>{t.waitlist.heartNote}</span>
           </p>
         </motion.form>
       </main>
@@ -372,7 +382,7 @@ export function WaitlistView({
           <span aria-hidden="true" className="text-[11.5px] text-[#71717A]">
             ·
           </span>
-        <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#71717A]">
+        <nav aria-label={t.footer.legalAria} className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#71717A]">
           <a
             href="/privacidad"
             onClick={(e: MouseEvent<HTMLAnchorElement>) => {
@@ -383,7 +393,7 @@ export function WaitlistView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Privacidad
+            {t.footer.privacy}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -396,7 +406,7 @@ export function WaitlistView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Eliminar cuenta
+            {t.footer.deleteAccount}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -409,7 +419,7 @@ export function WaitlistView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Términos
+            {t.footer.terms}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -422,7 +432,7 @@ export function WaitlistView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Seguridad infantil
+            {t.footer.childSafety}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -435,7 +445,7 @@ export function WaitlistView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Aviso legal
+            {t.footer.legalNotice}
           </a>
         </nav>
         </div>

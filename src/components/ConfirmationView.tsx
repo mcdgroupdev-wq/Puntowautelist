@@ -2,7 +2,9 @@ import { ArrowUpRight, Bell } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { MouseEvent } from 'react';
 import { PUNTO_BRAND } from '../config/punto';
+import { useI18n } from '../i18n';
 import { AnimatedCounter } from './AnimatedCounter';
+import { LanguageToggle } from './LanguageToggle';
 import { PuntoBrandMark } from './PuntoLogo';
 
 interface ConfirmationViewProps {
@@ -97,6 +99,8 @@ export function ConfirmationView({
   onBack,
   onNavigate,
 }: ConfirmationViewProps) {
+  const { t } = useI18n();
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 24 }}
@@ -105,8 +109,12 @@ export function ConfirmationView({
       transition={{ duration: 0.44, ease: [0.16, 1, 0.3, 1] }}
       className="flex flex-1 flex-col justify-between"
     >
-      <header className="flex w-full items-center justify-center pt-1">
+      <header className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2 pt-1">
+        <div aria-hidden="true" />
         <PuntoBrandMark symbolSize={38} />
+        <div className="justify-self-end">
+          <LanguageToggle />
+        </div>
       </header>
 
       <main className="my-auto w-full py-4 text-center">
@@ -213,11 +221,11 @@ export function ConfirmationView({
             className="font-display mt-4 text-[28px] leading-[1.1] font-bold tracking-[-0.03em] text-[#0B0B0D]"
             style={{ textWrap: 'balance' }}
           >
-            ¡Ya formas parte de Punto!
+            {t.confirmation.title}
           </h1>
 
           <p className="mx-auto mt-2.5 max-w-[34ch] text-[13.5px] leading-[1.52] text-[#52525B]">
-            Tu correo está en nuestra lista de espera. Te avisaremos cuando llegue el momento.
+            {t.confirmation.subtitle}
           </p>
         </motion.div>
 
@@ -237,14 +245,14 @@ export function ConfirmationView({
                 />
               </div>
               <p className="mt-1 text-[12px] font-medium text-[#52525B]">
-                personas en espera
+                {t.confirmation.counterLabel}
               </p>
               {count !== null && (
                 <div className="mt-2.5 inline-flex items-center gap-1.5 text-[11.5px] font-medium text-[#52525B]">
                   <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#DCFCE7] text-[#16A34A]">
                     <ArrowUpRight className="h-3 w-3" strokeWidth={2.5} aria-hidden="true" />
                   </span>
-                  <span>En aumento</span>
+                  <span>{t.confirmation.growing}</span>
                 </div>
               )}
             </div>
@@ -264,9 +272,9 @@ export function ConfirmationView({
             <Bell className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
           </div>
           <div>
-            <p className="text-[13px] font-semibold text-[#0B0B0D]">Aviso de lanzamiento</p>
+            <p className="text-[13px] font-semibold text-[#0B0B0D]">{t.confirmation.reminderTitle}</p>
             <p className="text-[12px] text-[#71717A]">
-              Solo te escribiremos cuando Punto esté listo.
+              {t.confirmation.reminderBody}
             </p>
           </div>
         </motion.div>
@@ -285,7 +293,7 @@ export function ConfirmationView({
             whileTap={{ scale: 0.985 }}
             className="inline-flex h-[50px] w-full items-center justify-center rounded-full bg-[#0A0A0C] px-7 text-[14.5px] font-semibold text-white shadow-[0_12px_24px_rgba(10,10,12,0.16)] transition-colors duration-150 hover:bg-[#1C1C20] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0B0B0D]/20 whitespace-nowrap"
           >
-            Volver al inicio
+            {t.confirmation.backButton}
           </motion.button>
         </motion.div>
 
@@ -295,10 +303,10 @@ export function ConfirmationView({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.38 }}
           className="mt-6"
-          aria-label="Redes sociales de Punto"
+          aria-label={t.confirmation.socialsLabel}
         >
           <h2 className="font-display text-[14px] font-bold tracking-[-0.01em] text-[#0B0B0D]">
-            Síguenos para más novedades
+            {t.confirmation.socialsHeading}
           </h2>
           <div className="mt-3 flex items-center justify-center gap-3">
             {PUNTO_BRAND.socials.map((social) => (
@@ -332,7 +340,7 @@ export function ConfirmationView({
         <span aria-hidden="true" className="text-[11.5px] text-[#52525B]">
           ·
         </span>
-        <nav aria-label="Legal" className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#52525B]">
+        <nav aria-label={t.footer.legalAria} className="flex flex-wrap items-center justify-center gap-2 text-[11.5px] font-medium text-[#52525B]">
           <a
             href="/privacidad"
             onClick={(e: MouseEvent<HTMLAnchorElement>) => {
@@ -343,7 +351,7 @@ export function ConfirmationView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Privacidad
+            {t.footer.privacy}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -356,7 +364,7 @@ export function ConfirmationView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Eliminar cuenta
+            {t.footer.deleteAccount}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -369,7 +377,7 @@ export function ConfirmationView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Términos
+            {t.footer.terms}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -382,7 +390,7 @@ export function ConfirmationView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Seguridad infantil
+            {t.footer.childSafety}
           </a>
           <span aria-hidden="true">·</span>
           <a
@@ -395,7 +403,7 @@ export function ConfirmationView({
             }}
             className="transition-colors hover:text-[#0B0B0D]"
           >
-            Aviso legal
+            {t.footer.legalNotice}
           </a>
         </nav>
       </footer>

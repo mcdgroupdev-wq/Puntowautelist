@@ -1,5 +1,6 @@
 import { animate } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
+import { useI18n } from '../i18n';
 
 interface AnimatedCounterProps {
   value: number | null;
@@ -12,6 +13,7 @@ export function AnimatedCounter({
   loading,
   className = '',
 }: AnimatedCounterProps) {
+  const { locale, t } = useI18n();
   const [displayValue, setDisplayValue] = useState<number>(value ?? 0);
   const prevValueRef = useRef<number>(value ?? 0);
 
@@ -44,14 +46,14 @@ export function AnimatedCounter({
     return (
       <span
         className={`inline-block h-7 w-20 rounded-lg bg-[#E4E4E7]/70 animate-pulse align-middle ${className}`}
-        aria-label="Cargando contador"
+        aria-label={t.counter.loadingAria}
       />
     );
   }
 
   if (value === null) {
     return (
-      <span className={`tabular-nums ${className}`} aria-label="Contador">
+      <span className={`tabular-nums ${className}`} aria-label={t.counter.idleAria}>
         —
       </span>
     );
@@ -59,7 +61,7 @@ export function AnimatedCounter({
 
   return (
     <span className={`tabular-nums ${className}`}>
-      {displayValue.toLocaleString('es-ES')}
+      {displayValue.toLocaleString(locale === 'es' ? 'es-ES' : 'en-US')}
     </span>
   );
 }
